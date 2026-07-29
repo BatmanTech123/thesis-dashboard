@@ -351,6 +351,9 @@
 .td-pc-price.flat { color: var(--growth); }
 .td-pc-range { font-family: var(--font-mono); font-size: 9.5px; color: var(--text-dim); margin-bottom: 6px; }
 .td-pc-vs { font-size: 11px; color: var(--text-muted); line-height: 1.45; }
+.td-pc-ma { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--border-soft); line-height: 1.6; }
+.td-pc-ma .up { color: var(--hedge); }
+.td-pc-ma .down { color: var(--speculative); }
 
 /* ---------- Price refresh bar ---------- */
 .td-pricebar {
@@ -473,6 +476,35 @@
 .td-stat-fill.bad { background: linear-gradient(90deg, var(--speculative-dim), var(--speculative)); }
 .td-stat-sub { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-dim); margin-top: 5px; }
 
+.td-version-badge {
+  font-family: var(--font-mono); font-size: 10px; color: var(--gold); background: rgba(232,196,104,0.1);
+  border: 1px solid var(--growth-dim); border-radius: 10px; padding: 1px 8px; margin-left: 4px;
+}
+.td-changelog-toggle { color: var(--text-dim); cursor: pointer; border-bottom: 1px dotted var(--text-dim); }
+.td-changelog-toggle:hover { color: var(--hedge); }
+.td-changelog { text-align: left; max-width: 480px; margin: 14px auto 0; padding-top: 12px; border-top: 1px solid var(--border-soft); }
+.td-changelog-item { display: flex; gap: 10px; padding: 5px 0; font-size: 11px; }
+.td-changelog-ver { font-family: var(--font-mono); color: var(--gold); min-width: 48px; }
+.td-changelog-date { font-family: var(--font-mono); color: var(--text-dim); min-width: 76px; }
+.td-changelog-note { color: var(--text-muted); }
+
+.td-beatcalc { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin: 14px 0 26px; }
+.td-beatcalc-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.td-beatcalc-row input {
+  flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+  font-family: var(--font-mono); font-size: 12px; padding: 8px 10px; border-radius: 5px; text-transform: uppercase;
+}
+.td-beat-result {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 14px; background: var(--surface2); border-radius: 8px; margin-top: 10px;
+}
+.td-beat-result-ticker { font-family: var(--font-mono); font-weight: 600; font-size: 14px; color: var(--text); }
+.td-beat-result-sub { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-dim); margin-top: 3px; }
+.td-beat-result-pct { font-family: var(--font-display); font-weight: 600; font-size: 22px; }
+.td-beat-result-pct.good { color: var(--hedge); }
+.td-beat-result-pct.mid { color: var(--growth); }
+.td-beat-result-pct.bad { color: var(--speculative); }
+
 .td-footer {
   padding: 14px 32px; border-top: 1px solid var(--border); background: var(--surface);
   font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); text-align: center;
@@ -482,7 +514,7 @@
 <div class="thesis-dash" id="thesisDash">
 
   <header class="td-masthead">
-    <div class="td-eyebrow"><span class="dot"></span>STRUCTURAL HEDGE THESIS &middot; DASHBOARD</div>
+    <div class="td-eyebrow"><span class="dot"></span>STRUCTURAL HEDGE THESIS &middot; DASHBOARD <span id="tdVersionBadge" class="td-version-badge"></span></div>
     <div class="td-title-row">
       <div>
         <h1 class="td-title">Portfolio Dashboard <em>&middot; standalone</em></h1>
@@ -544,7 +576,9 @@
     <section class="td-panel" id="panel-retirement"></section>
   </main>
 
-  <div class="td-footer">STRUCTURAL HEDGE FRAMEWORK DASHBOARD &middot; NOT FINANCIAL ADVICE &middot; RUNS LOCALLY, NO SERVER, NO AI &middot; DATA STAYS IN THIS BROWSER (LOCALSTORAGE)</div>
+  <div class="td-footer" id="tdFooter">STRUCTURAL HEDGE FRAMEWORK DASHBOARD &middot; NOT FINANCIAL ADVICE &middot; RUNS LOCALLY, NO SERVER, NO AI &middot; DATA STAYS IN THIS BROWSER (LOCALSTORAGE) &middot; <span id="tdVersionFooter" class="td-changelog-toggle"></span>
+    <div class="td-changelog" id="tdChangelog" style="display:none;"></div>
+  </div>
 </div>
 
 <script>
@@ -559,6 +593,18 @@
     growth: 'Growth', hedge: 'Structural Hedge', ballast: 'Index Ballast',
     speculative: 'Speculative', watch: 'Watch'
   };
+
+  // ---------------- App version / changelog (independent of portfolio DATA) ----------------
+  const APP_VERSION = 'v1.8.0';
+  const APP_CHANGELOG = [
+    { version:'v1.8.0', date:'2026-07-29', notes:'Added the red-day Beat-Rate Calculator (any ticker vs SPY) and this version/changelog panel.' },
+    { version:'v1.7.0', date:'2026-07-29', notes:'Added 50/200-day moving average overlay to the Price Check cards.' },
+    { version:'v1.6.0', date:'2026-07-28', notes:'Added the Thesis Integrity character sheet (SHEET tab).' },
+    { version:'v1.5.0', date:'2026-07-28', notes:'Split into public app + private data.json, loaded live via the GitHub API.' },
+    { version:'v1.4.0', date:'2026-07-28', notes:'Added What\u2019s The Latest briefing, the News tab, and manual journal entries.' },
+    { version:'v1.3.0', date:'2026-07-28', notes:'Multi-provider live price refresh (Finnhub / Twelve Data) with localStorage persistence.' },
+    { version:'v1.0.0', date:'2026-07-27', notes:'Initial standalone rebuild of the thesis dashboard.' }
+  ];
 
   const DEFAULT_DATA = {
   "meta": {
@@ -642,7 +688,7 @@
   let DATA = DEFAULT_DATA; // gets replaced if a private GitHub data.json loads successfully
 
   // ---------------- local storage layer (standalone-friendly, no window.storage) ----------------
-  const LS_KEYS = { apiKey:'thesisDash_finnhubKey', provider:'thesisDash_provider', priceStore:'thesisDash_priceStore', checked:'thesisDash_actionsChecked', journal:'thesisDash_userJournal', newsCache:'thesisDash_newsCache', lastVisit:'thesisDash_lastVisit', githubCfg:'thesisDash_githubCfg', githubSha:'thesisDash_githubSha', actionFirstSeen:'thesisDash_actionFirstSeen' };
+  const LS_KEYS = { apiKey:'thesisDash_finnhubKey', provider:'thesisDash_provider', priceStore:'thesisDash_priceStore', checked:'thesisDash_actionsChecked', journal:'thesisDash_userJournal', newsCache:'thesisDash_newsCache', lastVisit:'thesisDash_lastVisit', githubCfg:'thesisDash_githubCfg', githubSha:'thesisDash_githubSha', actionFirstSeen:'thesisDash_actionFirstSeen', maCache:'thesisDash_maCache' };
   function lsGet(key, fallback){
     try{ const v = localStorage.getItem(key); return v===null ? fallback : JSON.parse(v); }
     catch(e){ return fallback; }
@@ -681,6 +727,7 @@
   }
 
   let priceStore = lsGet(LS_KEYS.priceStore, {});
+  let maCache = lsGet(LS_KEYS.maCache, {});
   const SESSION_LAST_VISIT = lsGet(LS_KEYS.lastVisit, null);
   lsSet(LS_KEYS.lastVisit, new Date().toISOString());
   function getApiKey(providerId){
@@ -1031,10 +1078,33 @@
           tone = glPct>=0 ? 'up' : 'down';
         } else { vsText = p.label; tone = 'flat'; }
       }
-      html += '<div class="td-pc-card"><div class="td-pc-top"><span class="td-pc-ticker">' + p.ticker + '</span><span class="td-pc-price ' + tone + '">' + priceHTML + '</span></div><div class="td-pc-range">' + p.label + '</div><div class="td-pc-vs">' + vsText + '</div></div>';
+      const ma = maCache[p.ticker];
+      let maHTML = '<div class="td-pc-ma">MA not loaded</div>';
+      if(ma){
+        if(ma.sma50 == null && ma.sma200 == null){
+          maHTML = '<div class="td-pc-ma">Not enough history for an MA yet.</div>';
+        } else {
+          const refPrice = (live && live.price != null) ? live.price : ma.lastClose;
+          const parts = [];
+          if(ma.sma50 != null) parts.push('50D $' + ma.sma50.toFixed(2));
+          if(ma.sma200 != null) parts.push('200D $' + ma.sma200.toFixed(2));
+          let regime = '';
+          if(ma.sma50 != null && ma.sma200 != null){
+            regime = ma.sma50 > ma.sma200 ? ' <span class="up">&middot; golden-cross regime</span>' : ' <span class="down">&middot; death-cross regime</span>';
+          }
+          let posn = '';
+          if(refPrice != null && ma.sma200 != null){
+            posn = refPrice > ma.sma200 ? ' <span class="up">&middot; price above 200D</span>' : ' <span class="down">&middot; price below 200D</span>';
+          }
+          maHTML = '<div class="td-pc-ma">' + parts.join(' &middot; ') + regime + posn + '</div>';
+        }
+      }
+      html += '<div class="td-pc-card"><div class="td-pc-top"><span class="td-pc-ticker">' + p.ticker + '</span><span class="td-pc-price ' + tone + '">' + priceHTML + '</span></div><div class="td-pc-range">' + p.label + '</div><div class="td-pc-vs">' + vsText + '</div>' + maHTML + '</div>';
     });
     html += '</div>';
-    html += '<div class="td-note" style="margin-top:0;">Live where you\u2019ve added a key or a manual value &middot; click any price to correct it.</div>';
+    html += '<div class="td-news-status" id="tdMaStatus">' + (Object.keys(maCache).length ? 'Moving averages loaded ' + new Date(Object.values(maCache)[0].asOf).toLocaleString() : 'Uses your Twelve Data key (Finnhub\u2019s free tier no longer allows historical candles for US stocks).') + '</div>';
+    html += '<button class="td-news-loadbtn" id="tdMaLoadBtn" style="margin:8px 0 4px;">Load Moving Averages</button>';
+    html += '<div class="td-note" style="margin-top:6px;">Live where you\u2019ve added a key or a manual value &middot; click any price to correct it. 50/200-day are lagging trend references, not predictions.</div>';
 
     html += '<div class="td-section-title"><span class="n">04</span>OWNED STRUCTURAL HEDGES</div>';
     html += '<div class="td-holdings" style="margin-bottom:28px">';
@@ -1056,6 +1126,9 @@
     const pct = (DATA.total_investable / DATA.meta.portfolio_target * 100);
     document.getElementById('tdTargetPct').textContent = pct.toFixed(1) + '% of ' + fmt$(DATA.meta.portfolio_target);
     document.getElementById('tdTargetFill').style.width = Math.min(pct,100) + '%';
+
+    const maBtn = document.getElementById('tdMaLoadBtn');
+    if(maBtn) maBtn.addEventListener('click', loadMovingAverages);
   }
 
   // ---------------- Holdings (Roth / Brokerage) ----------------
@@ -1136,6 +1209,13 @@
       html += '<div class="td-beat-row"><div class="td-beat-ticker">' + r.ticker + '</div><div class="td-beat-track"><div class="td-beat-fill" style="width:' + (r.rate/maxRate*100) + '%"></div></div><div class="td-beat-pct">' + r.rate + '%</div></div>';
     });
     html += '</div>';
+    html += '<div class="td-note" style="margin-top:0;">This list is your own researched picks. Below, calculate the same metric live for any ticker.</div>';
+
+    html += '<div class="td-beatcalc">';
+    html += '<div class="td-beatcalc-row"><input type="text" id="tdBeatTicker" placeholder="TICKER (e.g. MSFT)"><button class="td-news-loadbtn" id="tdBeatCalcBtn">Calculate</button></div>';
+    html += '<div class="td-news-status" id="tdBeatStatus">Uses your Twelve Data key &middot; compares ~100 trading days against SPY.</div>';
+    html += '<div id="tdBeatResults"></div>';
+    html += '</div>';
 
     html += '<div class="td-section-title"><span class="n">04</span>ACCOUNT PLACEMENT RULES</div>';
     DATA.placement_rules.forEach(r=>{
@@ -1148,6 +1228,11 @@
     });
 
     el.innerHTML = html;
+
+    const beatBtn = document.getElementById('tdBeatCalcBtn');
+    if(beatBtn) beatBtn.addEventListener('click', runBeatRateCalculator);
+    const beatInput = document.getElementById('tdBeatTicker');
+    if(beatInput) beatInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') runBeatRateCalculator(); });
   }
 
   // ---------------- Journal ----------------
@@ -1317,6 +1402,114 @@
       if(i < newsSelectedTickers.length - 1) await sleep(1100);
     }
     statusEl.textContent = 'Loaded ' + ok + ' of ' + newsSelectedTickers.length + ' \u00b7 ' + new Date().toLocaleTimeString() + (fail ? (' \u00b7 ' + fail + ' failed') : '');
+  }
+
+  // ---------------- Moving Averages (Twelve Data only \u2014 Finnhub's free tier blocks US candles now) ----------------
+  async function fetchDailyCloses(ticker, key, outputsize){
+    const url = 'https://api.twelvedata.com/time_series?symbol=' + encodeURIComponent(ticker) + '&interval=1day&outputsize=' + outputsize + '&apikey=' + encodeURIComponent(key);
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if(data.status === 'error' || !data.values) throw new Error(data.message || 'no data');
+    return data.values.map(v => parseFloat(v.close)); // newest-first
+  }
+
+  function sma(closesNewestFirst, period){
+    if(closesNewestFirst.length < period) return null;
+    const window = closesNewestFirst.slice(0, period);
+    return window.reduce((a,b)=>a+b, 0) / period;
+  }
+
+  async function loadMovingAverages(){
+    const statusEl = document.getElementById('tdMaStatus');
+    const key = getApiKey('twelvedata');
+    if(!key){
+      if(statusEl) statusEl.textContent = 'Add a Twelve Data key \u2014 switch the provider dropdown up top to Twelve Data, paste a key, hit Save. (You can switch back after; keys are kept separately.)';
+      return;
+    }
+    const tickers = DATA.price_check_config.map(p=>p.ticker);
+    for(let i=0; i<tickers.length; i++){
+      const t = tickers[i];
+      if(statusEl) statusEl.textContent = 'Loading history ' + (i+1) + ' of ' + tickers.length + ' (' + t + ')...';
+      try{
+        const closes = await fetchDailyCloses(t, key, 210);
+        maCache[t] = { sma50: sma(closes, 50), sma200: sma(closes, 200), lastClose: closes[0] || null, asOf: new Date().toISOString() };
+      }catch(e){
+        maCache[t] = { sma50: null, sma200: null, lastClose: null, asOf: new Date().toISOString(), error: e.message };
+      }
+      lsSet(LS_KEYS.maCache, maCache);
+      if(i < tickers.length - 1) await sleep(7500); // Twelve Data free tier: 8 req/min
+    }
+    if(statusEl) statusEl.textContent = 'Moving averages loaded \u00b7 ' + new Date().toLocaleTimeString();
+    renderOverview();
+  }
+
+  // ---------------- Beat-Rate Calculator (the surprise) ----------------
+  async function fetchDailyClosesWithDates(ticker, key, outputsize){
+    const url = 'https://api.twelvedata.com/time_series?symbol=' + encodeURIComponent(ticker) + '&interval=1day&outputsize=' + outputsize + '&apikey=' + encodeURIComponent(key);
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if(data.status === 'error' || !data.values) throw new Error(data.message || 'no data for ' + ticker);
+    return data.values.map(v => ({ date: v.datetime, close: parseFloat(v.close) })); // newest-first
+  }
+
+  function computeDailyReturns(seriesNewestFirst){
+    const out = [];
+    for(let i=0; i<seriesNewestFirst.length-1; i++){
+      const today = seriesNewestFirst[i], prev = seriesNewestFirst[i+1];
+      if(prev.close){ out.push({ date: today.date, ret: (today.close - prev.close) / prev.close }); }
+    }
+    return out;
+  }
+
+  async function getSpyReturns(key){
+    const cached = lsGet('thesisDash_spyCache', null);
+    const todayStr = new Date().toISOString().slice(0,10);
+    if(cached && cached.asOfDate === todayStr){ return cached.returns; }
+    const series = await fetchDailyClosesWithDates('SPY', key, 110);
+    const returns = computeDailyReturns(series);
+    lsSet('thesisDash_spyCache', { asOfDate: todayStr, returns });
+    return returns;
+  }
+
+  async function runBeatRateCalculator(){
+    const input = document.getElementById('tdBeatTicker');
+    const statusEl = document.getElementById('tdBeatStatus');
+    const resultsEl = document.getElementById('tdBeatResults');
+    const ticker = input.value.trim().toUpperCase();
+    if(!ticker){ statusEl.textContent = 'Type a ticker first.'; return; }
+    const key = getApiKey('twelvedata');
+    if(!key){
+      statusEl.textContent = 'Add a Twelve Data key \u2014 switch the provider dropdown up top to Twelve Data, paste a key, hit Save. (You can switch back after; keys are kept separately.)';
+      return;
+    }
+    statusEl.textContent = 'Fetching ' + ticker + ' and SPY, computing...';
+    try{
+      const spyReturns = await getSpyReturns(key);
+      const tickerSeries = await fetchDailyClosesWithDates(ticker, key, 110);
+      const tickerReturns = computeDailyReturns(tickerSeries);
+      const spyByDate = {};
+      spyReturns.forEach(r => { spyByDate[r.date] = r.ret; });
+      let redDays = 0, beatDays = 0;
+      tickerReturns.forEach(r=>{
+        const spyRet = spyByDate[r.date];
+        if(spyRet !== undefined && spyRet < 0){
+          redDays++;
+          if(r.ret > spyRet) beatDays++;
+        }
+      });
+      if(redDays === 0){
+        statusEl.textContent = 'Couldn\u2019t line up enough overlapping red days for ' + ticker + ' \u2014 try again later.';
+        return;
+      }
+      const beatRate = Math.round(beatDays / redDays * 100);
+      const tone = beatRate >= 60 ? 'good' : beatRate >= 40 ? 'mid' : 'bad';
+      statusEl.textContent = 'Calculated \u00b7 ' + new Date().toLocaleTimeString();
+      resultsEl.innerHTML = '<div class="td-beat-result"><div><div class="td-beat-result-ticker">' + ticker + '</div><div class="td-beat-result-sub">Beat SPY on ' + beatDays + ' of ' + redDays + ' red-market days (~last 100 trading days)</div></div><div class="td-beat-result-pct ' + tone + '">' + beatRate + '%</div></div>' + resultsEl.innerHTML;
+    }catch(e){
+      statusEl.textContent = 'Couldn\u2019t calculate ' + ticker + ' (' + e.message + ') \u2014 check the ticker symbol.';
+    }
   }
 
   // ---------------- Actions ----------------
@@ -1577,6 +1770,25 @@
     renderRetirement();
   }
 
+  // ---------------- Version / changelog wiring ----------------
+  function initVersionInfo(){
+    const badge = document.getElementById('tdVersionBadge');
+    if(badge) badge.textContent = APP_VERSION;
+    const footerVer = document.getElementById('tdVersionFooter');
+    if(footerVer) footerVer.textContent = APP_VERSION + ' \u2014 changelog';
+    const panel = document.getElementById('tdChangelog');
+    if(panel){
+      panel.innerHTML = APP_CHANGELOG.map(c =>
+        '<div class="td-changelog-item"><span class="td-changelog-ver">' + c.version + '</span><span class="td-changelog-date">' + c.date + '</span><span class="td-changelog-note">' + c.notes + '</span></div>'
+      ).join('');
+    }
+    if(footerVer && panel){
+      footerVer.addEventListener('click', ()=>{
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+      });
+    }
+  }
+
   // ---------------- init ----------------
   async function bootstrap(){
     await loadDataFromGitHub(); // no-op, falls back silently, if nothing configured yet
@@ -1584,6 +1796,7 @@
     initTabs();
     initPriceBar();
     initDataBar();
+    initVersionInfo();
   }
   bootstrap();
 })();
