@@ -1,0 +1,1454 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+
+.thesis-dash {
+  --bg: #0A0D12;
+  --surface: #12161D;
+  --surface2: #171C24;
+  --border: #262B33;
+  --border-soft: #1D222A;
+  --text: #E8E6DF;
+  --text-muted: #8B9099;
+  --text-dim: #565C66;
+  --hedge: #3FA88A;
+  --hedge-dim: #234A3F;
+  --growth: #D9A441;
+  --growth-dim: #4A3D22;
+  --speculative: #C1543E;
+  --speculative-dim: #4A2A22;
+  --ballast: #6C87B0;
+  --ballast-dim: #26313F;
+  --watch: #8B9099;
+  --gold: #E8C468;
+
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  border-radius: 14px;
+  overflow: hidden;
+  max-width: 980px;
+  margin: 0 auto;
+  border: 1px solid var(--border);
+}
+
+.thesis-dash * { box-sizing: border-box; }
+.thesis-dash ::selection { background: var(--hedge-dim); color: var(--text); }
+
+/* ---------- Masthead ---------- */
+.td-masthead {
+  padding: 28px 32px 20px;
+  border-bottom: 1px solid var(--border);
+  background:
+    radial-gradient(ellipse 600px 200px at 15% 0%, rgba(63,168,138,0.08), transparent),
+    var(--surface);
+}
+.td-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hedge);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.td-eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--hedge); box-shadow: 0 0 8px var(--hedge); }
+.td-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.td-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 27px;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin: 0;
+}
+.td-title em { color: var(--text-muted); font-style: italic; font-weight: 500; }
+.td-subline {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+.td-total-block { text-align: right; }
+.td-total-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.td-total-num {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 30px;
+  color: var(--gold);
+  line-height: 1.15;
+}
+.td-target-bar {
+  margin-top: 22px;
+}
+.td-target-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.td-target-track {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface2);
+  border: 1px solid var(--border-soft);
+  overflow: hidden;
+}
+.td-target-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--hedge), var(--gold));
+  border-radius: 3px;
+}
+
+/* ---------- Tabs ---------- */
+.td-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 32px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.td-tabs::-webkit-scrollbar { display: none; }
+.td-tab {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  padding: 14px 14px 12px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+.td-tab:hover { color: var(--text-muted); }
+.td-tab.active { color: var(--text); border-bottom-color: var(--hedge); }
+
+/* ---------- Main / panels ---------- */
+.td-main { background: var(--bg); min-height: 400px; }
+.td-panel { display: none; padding: 26px 32px 34px; animation: tdFade 0.25s ease; }
+.td-panel.active { display: block; }
+@keyframes tdFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+.td-section-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.td-section-title span.n { color: var(--hedge); margin-right: 8px; }
+
+/* ---------- Cards grid ---------- */
+.td-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+@media (max-width: 720px) { .td-grid { grid-template-columns: repeat(2, 1fr); } }
+.td-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.td-card-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
+.td-card-value { font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--text); }
+.td-card-sub { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-muted); margin-top: 4px; }
+
+/* ---------- Category bar (allocation) ---------- */
+.td-catbar { display: flex; height: 22px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-soft); margin-bottom: 10px; }
+.td-catbar-seg { height: 100%; }
+.td-catlegend { display: flex; flex-wrap: wrap; gap: 14px; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-bottom: 26px; }
+.td-catlegend .item { display: flex; align-items: center; gap: 6px; }
+.td-catlegend .sw { width: 9px; height: 9px; border-radius: 2px; }
+.td-note { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-dim); font-style: italic; margin-top: -18px; margin-bottom: 26px; }
+
+/* ---------- Score bar (signature element) ---------- */
+.td-score { display: inline-flex; align-items: center; gap: 8px; }
+.td-score-groups { display: flex; gap: 3px; }
+.td-score-group { display: flex; gap: 1.5px; }
+.td-score-tick { width: 4px; height: 12px; border-radius: 1px; background: var(--border); }
+.td-score-tick.filled.tier-hedge { background: var(--hedge); }
+.td-score-tick.filled.tier-mid { background: var(--growth); }
+.td-score-tick.filled.tier-low { background: var(--speculative); }
+.td-score-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); min-width: 30px; }
+
+/* ---------- Holdings table ---------- */
+.td-filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.td-filter {
+  font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+  padding: 6px 13px; cursor: pointer; display: flex; align-items: center; gap: 6px;
+  transition: all 0.15s ease;
+}
+.td-filter .sw { width: 7px; height: 7px; border-radius: 50%; }
+.td-filter:hover { border-color: var(--text-dim); }
+.td-filter.active { color: var(--text); border-color: var(--hedge); background: var(--hedge-dim); }
+
+.td-holdings { display: flex; flex-direction: column; gap: 8px; }
+.td-holding {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  border-radius: 8px;
+  padding: 13px 16px;
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  gap: 14px;
+  align-items: center;
+}
+.td-holding.cat-growth { border-left-color: var(--growth); }
+.td-holding.cat-hedge { border-left-color: var(--hedge); }
+.td-holding.cat-ballast { border-left-color: var(--ballast); }
+.td-holding.cat-speculative { border-left-color: var(--speculative); }
+.td-holding.cat-watch { border-left-color: var(--watch); }
+
+.td-hticker { font-family: var(--font-mono); font-weight: 600; font-size: 15px; color: var(--text); }
+.td-hname { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+.td-hbody { min-width: 0; }
+.td-hmeta { display: flex; gap: 12px; font-family: var(--font-mono); font-size: 10.5px; color: var(--text-muted); margin-bottom: 5px; flex-wrap: wrap; }
+.td-hnotes { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+.td-hright { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+
+.td-badge {
+  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 4px; white-space: nowrap; border: 1px solid transparent;
+}
+.td-badge.b-hold { color: var(--text-dim); border-color: var(--border); }
+.td-badge.b-new { color: var(--hedge); border-color: var(--hedge-dim); background: rgba(63,168,138,0.08); }
+.td-badge.b-target { color: var(--gold); border-color: var(--growth-dim); background: rgba(217,164,65,0.1); font-weight: 600; }
+.td-badge.b-exit { color: var(--speculative); border-color: var(--speculative-dim); background: rgba(193,84,62,0.08); }
+.td-badge.b-watch { color: var(--watch); border-color: var(--border); }
+.td-badge.b-patient { color: var(--ballast); border-color: var(--ballast-dim); background: rgba(108,135,176,0.08); }
+.td-badge.b-noTrim { color: var(--growth); border-color: var(--growth-dim); }
+
+/* ---------- Framework components ---------- */
+.td-comp-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; }
+.td-comp {
+  display: grid; grid-template-columns: 30px 1fr; gap: 12px;
+  padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+}
+.td-comp-num { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--hedge); }
+.td-comp-name { font-weight: 600; font-size: 13.5px; color: var(--text); margin-bottom: 3px; }
+.td-comp-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+.td-universe-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 720px) { .td-universe-cols { grid-template-columns: 1fr; } }
+.td-uni-item {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  padding: 8px 0; border-bottom: 1px solid var(--border-soft); font-size: 12.5px;
+}
+.td-uni-item:last-child { border-bottom: none; }
+.td-uni-ticker { font-family: var(--font-mono); font-weight: 600; color: var(--text); min-width: 52px; }
+.td-uni-note { color: var(--text-muted); font-size: 11.5px; flex: 1; }
+.td-uni-owned { font-family: var(--font-mono); font-size: 9px; color: var(--hedge); text-transform: uppercase; }
+
+/* ---------- Red day beat rates ---------- */
+.td-beatrate { display: flex; flex-direction: column; gap: 7px; margin: 20px 0 30px; }
+.td-beat-row { display: grid; grid-template-columns: 55px 1fr 40px; gap: 10px; align-items: center; }
+.td-beat-ticker { font-family: var(--font-mono); font-size: 12px; color: var(--text); }
+.td-beat-track { height: 10px; background: var(--surface2); border-radius: 3px; overflow: hidden; border: 1px solid var(--border-soft); }
+.td-beat-fill { height: 100%; background: linear-gradient(90deg, var(--hedge-dim), var(--hedge)); }
+.td-beat-pct { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); text-align: right; }
+
+/* ---------- Placement rules ---------- */
+.td-rule { padding: 10px 0; border-bottom: 1px solid var(--border-soft); font-size: 12.5px; color: var(--text-muted); line-height: 1.55; }
+.td-rule:last-child { border-bottom: none; }
+.td-rule b { color: var(--text); font-family: var(--font-mono); }
+
+/* ---------- Timeline (journal + catalysts) ---------- */
+.td-timeline { position: relative; padding-left: 20px; }
+.td-timeline::before { content: ''; position: absolute; left: 5px; top: 6px; bottom: 6px; width: 1px; background: var(--border); }
+.td-tl-item { position: relative; padding-bottom: 18px; }
+.td-tl-item::before {
+  content: ''; position: absolute; left: -20px; top: 4px; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--bg); border: 2px solid var(--hedge);
+}
+.td-tl-item.future::before { border-color: var(--text-dim); }
+.td-tl-date { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-dim); margin-bottom: 3px; }
+.td-tl-head { display: flex; gap: 8px; align-items: center; margin-bottom: 4px; flex-wrap: wrap; }
+.td-tl-ticker { font-family: var(--font-mono); font-weight: 600; font-size: 12.5px; color: var(--text); }
+.td-tl-action { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 3px; }
+.td-tl-detail { font-size: 12.5px; color: var(--text-muted); line-height: 1.55; }
+.td-today-divider {
+  display: flex; align-items: center; gap: 10px; margin: 4px 0 18px -20px;
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold);
+}
+.td-today-divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold), transparent); }
+
+/* ---------- Actions / checklist ---------- */
+.td-actgroup { margin-bottom: 26px; }
+.td-act-heading { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; }
+.td-act-heading .count { color: var(--bg); background: var(--text-dim); border-radius: 8px; padding: 1px 7px; font-size: 10px; }
+.td-actgroup.urgent .td-act-heading { color: var(--speculative); }
+.td-actgroup.urgent .td-act-heading .count { background: var(--speculative); }
+.td-act-item {
+  display: flex; align-items: flex-start; gap: 11px; padding: 10px 12px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 7px; margin-bottom: 6px;
+  cursor: pointer; transition: opacity 0.15s ease;
+}
+.td-act-item:hover { border-color: var(--text-dim); }
+.td-checkbox {
+  width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--text-dim); flex-shrink: 0; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--bg);
+}
+.td-act-item.done { opacity: 0.45; }
+.td-act-item.done .td-checkbox { background: var(--hedge); border-color: var(--hedge); }
+.td-act-item.done .td-act-text { text-decoration: line-through; }
+.td-act-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+.td-decision-log { display: flex; flex-direction: column; gap: 8px; }
+.td-decision { font-size: 12.5px; color: var(--text-muted); padding: 9px 12px; background: var(--surface2); border-radius: 6px; border-left: 2px solid var(--ballast); line-height: 1.5; }
+
+.td-rules-list { display: flex; flex-direction: column; gap: 0; counter-reset: rulenum; }
+.td-rule-item { display: flex; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border-soft); font-size: 13px; color: var(--text-muted); }
+.td-rule-item:last-child { border-bottom: none; }
+.td-rule-num { font-family: var(--font-mono); color: var(--hedge); font-weight: 600; }
+
+/* ---------- Retirement ---------- */
+.td-retire-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+@media (max-width: 720px) { .td-retire-cards { grid-template-columns: 1fr; } }
+.td-retire-card { padding: 18px 18px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); }
+.td-retire-card.viable { border-color: var(--hedge-dim); background: linear-gradient(160deg, rgba(63,168,138,0.06), var(--surface)); }
+.td-retire-card.notviable { border-color: var(--speculative-dim); }
+.td-retire-age { font-family: var(--font-display); font-size: 24px; font-weight: 600; color: var(--text); }
+.td-retire-tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; }
+.td-retire-tag.yes { color: var(--hedge); background: rgba(63,168,138,0.12); }
+.td-retire-tag.no { color: var(--speculative); background: rgba(193,84,62,0.12); }
+.td-retire-body { font-size: 12.5px; color: var(--text-muted); line-height: 1.6; margin-top: 10px; }
+.td-retire-num { font-family: var(--font-mono); color: var(--gold); font-weight: 600; }
+
+.td-pricecheck { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 8px; }
+@media (max-width: 720px) { .td-pricecheck { grid-template-columns: repeat(2, 1fr); } }
+.td-pc-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+.td-pc-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.td-pc-ticker { font-family: var(--font-mono); font-weight: 600; font-size: 13px; color: var(--text); }
+.td-pc-price { font-family: var(--font-mono); font-weight: 600; font-size: 15px; }
+.td-pc-price.down { color: var(--speculative); }
+.td-pc-price.up { color: var(--hedge); }
+.td-pc-price.flat { color: var(--growth); }
+.td-pc-range { font-family: var(--font-mono); font-size: 9.5px; color: var(--text-dim); margin-bottom: 6px; }
+.td-pc-vs { font-size: 11px; color: var(--text-muted); line-height: 1.45; }
+
+/* ---------- Price refresh bar ---------- */
+.td-pricebar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 10px 32px; background: var(--surface2); border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono); font-size: 11px;
+}
+.td-pricebar input[type="password"], .td-pricebar input[type="text"] {
+  background: var(--bg); border: 1px solid var(--border); color: var(--text);
+  font-family: var(--font-mono); font-size: 11px; padding: 6px 9px; border-radius: 5px; width: 190px;
+}
+.td-pricebar input::placeholder { color: var(--text-dim); }
+.td-pricebar select {
+  background: var(--bg); border: 1px solid var(--border); color: var(--text);
+  font-family: var(--font-mono); font-size: 11px; padding: 6px 9px; border-radius: 5px;
+}
+.td-pricebar button {
+  font-family: var(--font-mono); font-size: 11px; color: var(--text);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 5px;
+  padding: 6px 12px; cursor: pointer;
+}
+.td-pricebar button:hover { border-color: var(--hedge); }
+.td-pricebar button.primary { background: var(--hedge-dim); border-color: var(--hedge); color: var(--hedge); }
+.td-pricebar-status { color: var(--text-muted); flex: 1; min-width: 160px; }
+.td-pricebar a { color: var(--text-dim); text-decoration: none; border-bottom: 1px dotted var(--text-dim); }
+.td-pricebar a:hover { color: var(--hedge); }
+.td-pricebar-toggle { color: var(--text-dim); cursor: pointer; border-bottom: 1px dotted var(--text-dim); }
+
+.td-price-live {
+  cursor: pointer; font-family: var(--font-mono); font-size: 11px; color: var(--text);
+  padding: 1px 4px; border-radius: 3px; border: 1px dashed transparent;
+}
+.td-price-live:hover { border-color: var(--text-dim); background: var(--surface2); }
+.td-price-live .chg.up { color: var(--hedge); }
+.td-price-live .chg.down { color: var(--speculative); }
+.td-price-live .chg.flat { color: var(--text-dim); }
+.td-price-live .gl.up { color: var(--hedge); }
+.td-price-live .gl.down { color: var(--speculative); }
+.td-price-live .src-manual { color: var(--growth); font-style: italic; }
+.td-price-empty { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-dim); cursor: pointer; border-bottom: 1px dotted var(--text-dim); }
+
+.td-addjournal {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px; margin-bottom: 22px;
+}
+.td-addjournal-row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.td-addjournal input[type="date"], .td-addjournal input[type="text"], .td-addjournal select {
+  background: var(--bg); border: 1px solid var(--border); color: var(--text);
+  font-family: var(--font-mono); font-size: 11.5px; padding: 7px 9px; border-radius: 5px;
+}
+.td-addjournal input[type="text"] { flex: 1; min-width: 140px; }
+.td-addjournal textarea {
+  width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+  font-family: var(--font-body); font-size: 12.5px; padding: 8px 10px; border-radius: 5px; resize: vertical;
+}
+.td-addjournal button {
+  font-family: var(--font-mono); font-size: 11px; color: var(--hedge);
+  background: var(--hedge-dim); border: 1px solid var(--hedge); border-radius: 5px;
+  padding: 7px 14px; cursor: pointer;
+}
+.td-addjournal button:hover { opacity: 0.85; }
+
+.td-news-controls { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 20px; }
+.td-news-tickers { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.td-news-chip {
+  font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);
+  background: var(--bg); border: 1px solid var(--border); border-radius: 20px;
+  padding: 5px 11px; cursor: pointer; user-select: none;
+}
+.td-news-chip.checked { color: var(--hedge); border-color: var(--hedge); background: var(--hedge-dim); }
+.td-news-loadbtn {
+  font-family: var(--font-mono); font-size: 11px; color: var(--hedge);
+  background: var(--hedge-dim); border: 1px solid var(--hedge); border-radius: 5px;
+  padding: 8px 16px; cursor: pointer;
+}
+.td-news-loadbtn:hover { opacity: 0.85; }
+.td-news-status { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-dim); margin-top: 10px; }
+.td-news-group { margin-bottom: 22px; }
+.td-news-group-head { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border-soft); }
+.td-news-item { padding: 9px 0; border-bottom: 1px solid var(--border-soft); }
+.td-news-item:last-child { border-bottom: none; }
+.td-news-headline { font-size: 12.5px; color: var(--text); text-decoration: none; line-height: 1.4; }
+.td-news-headline:hover { color: var(--hedge); }
+.td-news-meta { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); margin-top: 3px; }
+.td-news-empty { font-size: 11.5px; color: var(--text-dim); font-style: italic; }
+
+.td-latest {
+  background: linear-gradient(160deg, rgba(232,196,104,0.07), var(--surface));
+  border: 1px solid var(--growth-dim); border-radius: 12px; padding: 18px 20px; margin-bottom: 28px;
+}
+.td-latest-title {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; color: var(--gold);
+  display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+}
+.td-latest-title .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+.td-latest-visit { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-dim); margin-bottom: 16px; }
+.td-latest-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 720px) { .td-latest-grid { grid-template-columns: 1fr; } }
+.td-latest-block { }
+.td-latest-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
+.td-latest-line { font-size: 12.5px; color: var(--text-muted); line-height: 1.6; margin-bottom: 5px; }
+.td-latest-line .tkr { font-family: var(--font-mono); font-weight: 600; color: var(--text); }
+.td-latest-line .up { color: var(--hedge); }
+.td-latest-line .down { color: var(--speculative); }
+.td-latest-empty { font-size: 12px; color: var(--text-dim); font-style: italic; }
+
+.td-footer {
+  padding: 14px 32px; border-top: 1px solid var(--border); background: var(--surface);
+  font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); text-align: center;
+}
+</style>
+
+<div class="thesis-dash" id="thesisDash">
+
+  <header class="td-masthead">
+    <div class="td-eyebrow"><span class="dot"></span>STRUCTURAL HEDGE THESIS &middot; DASHBOARD</div>
+    <div class="td-title-row">
+      <div>
+        <h1 class="td-title">Portfolio Dashboard <em>&middot; standalone</em></h1>
+        <div class="td-subline" id="tdSubline">Sample data shown &middot; connect your private repo above for your real portfolio</div>
+      </div>
+      <div class="td-total-block">
+        <div class="td-total-label">Total Investable</div>
+        <div class="td-total-num" id="tdTotalNum">$0</div>
+      </div>
+    </div>
+    <div class="td-target-bar">
+      <div class="td-target-row"><span>Toward $2.0M target</span><span id="tdTargetPct">0%</span></div>
+      <div class="td-target-track"><div class="td-target-fill" id="tdTargetFill" style="width:0%"></div></div>
+    </div>
+  </header>
+
+  <div class="td-pricebar" id="tdDataBar">
+    <input type="text" id="tdGhOwner" placeholder="GitHub username">
+    <input type="text" id="tdGhRepo" placeholder="private repo name">
+    <input type="text" id="tdGhPath" placeholder="data.json" value="data.json">
+    <input type="password" id="tdGhToken" placeholder="Personal access token">
+    <button id="tdGhSaveBtn" class="primary">Save &amp; Load My Data</button>
+    <span class="td-pricebar-status" id="tdDataStatus">Showing the built-in sample portfolio.</span>
+  </div>
+
+  <div class="td-pricebar">
+    <select id="tdProviderSelect">
+      <option value="finnhub">Finnhub (60/min)</option>
+      <option value="twelvedata">Twelve Data (800/day)</option>
+    </select>
+    <input type="password" id="tdApiKeyInput" placeholder="API key (free)" />
+    <button id="tdSaveKeyBtn">Save key</button>
+    <button id="tdRefreshBtn" class="primary">Refresh Prices</button>
+    <span class="td-pricebar-status" id="tdPriceStatus">Not refreshed yet &mdash; add a free key, or click any price to enter it by hand.</span>
+    <a href="https://finnhub.io/register" target="_blank" rel="noopener" id="tdSignupLink">Get free key &rarr;</a>
+  </div>
+
+  <nav class="td-tabs" id="tdTabs">
+    <button class="td-tab active" data-panel="overview">OVERVIEW</button>
+    <button class="td-tab" data-panel="roth">ROTH IRA</button>
+    <button class="td-tab" data-panel="brokerage">BROKERAGE</button>
+    <button class="td-tab" data-panel="framework">FRAMEWORK</button>
+    <button class="td-tab" data-panel="journal">JOURNAL</button>
+    <button class="td-tab" data-panel="news">NEWS</button>
+    <button class="td-tab" data-panel="actions">ACTIONS</button>
+    <button class="td-tab" data-panel="retirement">RETIREMENT</button>
+  </nav>
+
+  <main class="td-main">
+    <section class="td-panel active" id="panel-overview"></section>
+    <section class="td-panel" id="panel-roth"></section>
+    <section class="td-panel" id="panel-brokerage"></section>
+    <section class="td-panel" id="panel-framework"></section>
+    <section class="td-panel" id="panel-journal"></section>
+    <section class="td-panel" id="panel-news"></section>
+    <section class="td-panel" id="panel-actions"></section>
+    <section class="td-panel" id="panel-retirement"></section>
+  </main>
+
+  <div class="td-footer">STRUCTURAL HEDGE FRAMEWORK DASHBOARD &middot; NOT FINANCIAL ADVICE &middot; RUNS LOCALLY, NO SERVER, NO AI &middot; DATA STAYS IN THIS BROWSER (LOCALSTORAGE)</div>
+</div>
+
+<script>
+(function(){
+  const ROOT = document.getElementById('thesisDash');
+
+  const CAT_COLOR = {
+    growth: 'var(--growth)', hedge: 'var(--hedge)', ballast: 'var(--ballast)',
+    speculative: 'var(--speculative)', watch: 'var(--watch)'
+  };
+  const CAT_LABEL = {
+    growth: 'Growth', hedge: 'Structural Hedge', ballast: 'Index Ballast',
+    speculative: 'Speculative', watch: 'Watch'
+  };
+
+  const DEFAULT_DATA = {
+  "meta": {
+    "portfolio_target": 1000000,
+    "retirement_income_goal": 60000,
+    "retirement_target_age": 60,
+    "last_updated": "sample"
+  },
+  "accounts": {
+    "sample_account": {
+      "label": "Sample Account",
+      "custodian": "Demo",
+      "value": 10000,
+      "tax": "taxable",
+      "notes": "Connect your private data.json above to replace this sample."
+    }
+  },
+  "total_investable": 10000,
+  "framework": {
+    "name": "Sample Structural Hedge Framework",
+    "reference": "Connect your data to see your real framework",
+    "components": [
+      {
+        "num": 1,
+        "name": "Sample component",
+        "desc": "This is placeholder data. Connect your private repo above."
+      }
+    ]
+  },
+  "holdings_roth": [
+    {
+      "ticker": "DEMO",
+      "name": "Sample Holding",
+      "category": "growth",
+      "shares": 10,
+      "cost_basis": 1000,
+      "status": "hold",
+      "notes": "This is sample data. Add your GitHub data source above to see your real portfolio."
+    }
+  ],
+  "holdings_brokerage": [],
+  "harvested_losses": [],
+  "framework_universe": {
+    "hedges": [],
+    "skip": []
+  },
+  "red_day_beat_rates": [],
+  "placement_rules": [],
+  "roth_target_allocation": [],
+  "journal": [
+    {
+      "date": "2026-01-01",
+      "ticker": "DEMO",
+      "action": "NOTE",
+      "detail": "This is a sample journal entry. Connect your private repo above to see your real log."
+    }
+  ],
+  "catalysts": [],
+  "pending_actions": {
+    "urgent": [],
+    "this_month": [],
+    "ongoing": []
+  },
+  "user_decisions": [],
+  "investing_rules": [],
+  "price_check_config": [],
+  "retirement": {
+    "age_50": {
+      "viable": false,
+      "reason": "Sample data."
+    },
+    "age_55": {
+      "viable": true,
+      "at_12pct": 1000000,
+      "monthly_income": 3333,
+      "note": "Sample data \u2014 connect your private repo above."
+    }
+  }
+};
+
+  let DATA = DEFAULT_DATA; // gets replaced if a private GitHub data.json loads successfully
+
+  // ---------------- local storage layer (standalone-friendly, no window.storage) ----------------
+  const LS_KEYS = { apiKey:'thesisDash_finnhubKey', provider:'thesisDash_provider', priceStore:'thesisDash_priceStore', checked:'thesisDash_actionsChecked', journal:'thesisDash_userJournal', newsCache:'thesisDash_newsCache', lastVisit:'thesisDash_lastVisit', githubCfg:'thesisDash_githubCfg', githubSha:'thesisDash_githubSha' };
+  function lsGet(key, fallback){
+    try{ const v = localStorage.getItem(key); return v===null ? fallback : JSON.parse(v); }
+    catch(e){ return fallback; }
+  }
+  function lsSet(key, val){
+    try{ localStorage.setItem(key, JSON.stringify(val)); return true; }catch(e){ return false; }
+  }
+
+  function b64DecodeUnicode(str){
+    return decodeURIComponent(atob(str).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+  }
+
+  async function loadDataFromGitHub(){
+    const cfg = lsGet(LS_KEYS.githubCfg, null);
+    const statusEl = document.getElementById('tdDataStatus');
+    if(!cfg || !cfg.owner || !cfg.repo || !cfg.token){
+      if(statusEl) statusEl.textContent = 'Showing the built-in sample portfolio \u2014 connect your private repo above to load your real numbers.';
+      return false;
+    }
+    try{
+      const path = cfg.path || 'data.json';
+      const url = 'https://api.github.com/repos/' + encodeURIComponent(cfg.owner) + '/' + encodeURIComponent(cfg.repo) + '/contents/' + path;
+      const res = await fetch(url, { headers: { 'Authorization':'Bearer ' + cfg.token, 'Accept':'application/vnd.github+json' } });
+      if(!res.ok) throw new Error('HTTP ' + res.status + (res.status===404 ? ' (check owner/repo/path)' : res.status===401 ? ' (bad token)' : ''));
+      const json = await res.json();
+      const decoded = b64DecodeUnicode(json.content.replace(/\n/g,''));
+      const parsed = JSON.parse(decoded);
+      DATA = parsed;
+      lsSet(LS_KEYS.githubSha, json.sha);
+      if(statusEl) statusEl.textContent = 'Loaded your data from ' + cfg.owner + '/' + cfg.repo + ' \u00b7 ' + new Date().toLocaleTimeString();
+      return true;
+    }catch(e){
+      if(statusEl) statusEl.textContent = 'Couldn\u2019t load from GitHub (' + e.message + ') \u2014 showing the built-in sample portfolio instead.';
+      return false;
+    }
+  }
+
+  let priceStore = lsGet(LS_KEYS.priceStore, {});
+  const SESSION_LAST_VISIT = lsGet(LS_KEYS.lastVisit, null);
+  lsSet(LS_KEYS.lastVisit, new Date().toISOString());
+  function getApiKey(providerId){
+    const keys = lsGet(LS_KEYS.apiKey, {});
+    return keys[providerId || getProvider()] || '';
+  }
+  function setApiKey(providerId, val){
+    const keys = lsGet(LS_KEYS.apiKey, {});
+    keys[providerId] = val;
+    lsSet(LS_KEYS.apiKey, keys);
+  }
+  function getProvider(){ return lsGet(LS_KEYS.provider, 'finnhub'); }
+
+  // Each provider: how to build the URL, how to read price + daily % change out of its response,
+  // and a safe requests-per-minute figure to stay under its free-tier cap.
+  const PROVIDERS = {
+    finnhub: {
+      label: 'Finnhub',
+      rpm: 55,
+      signupUrl: 'https://finnhub.io/register',
+      buildUrl: (ticker, key) => 'https://finnhub.io/api/v1/quote?symbol=' + encodeURIComponent(ticker) + '&token=' + encodeURIComponent(key),
+      parse: (data) => {
+        if(data.c === undefined || (data.c === 0 && data.pc === 0)) throw new Error('no data');
+        return { price:data.c, dp:data.dp };
+      }
+    },
+    twelvedata: {
+      label: 'Twelve Data',
+      rpm: 7,
+      signupUrl: 'https://twelvedata.com/pricing',
+      buildUrl: (ticker, key) => 'https://api.twelvedata.com/quote?symbol=' + encodeURIComponent(ticker) + '&apikey=' + encodeURIComponent(key),
+      parse: (data) => {
+        if(data.status === 'error' || data.close === undefined) throw new Error(data.message || 'no data');
+        return { price:parseFloat(data.close), dp: (data.percent_change !== undefined ? parseFloat(data.percent_change) : null) };
+      }
+    }
+  };
+
+  function allTickers(){
+    const set = new Set();
+    DATA.holdings_roth.forEach(h=>{ if(h.ticker) set.add(h.ticker); });
+    DATA.holdings_brokerage.forEach(h=>{ if(h.ticker) set.add(h.ticker); });
+    return Array.from(set);
+  }
+
+  function sleep(ms){ return new Promise(res=>setTimeout(res, ms)); }
+
+  async function refreshPrices(){
+    const providerId = getProvider();
+    const provider = PROVIDERS[providerId];
+    const key = getApiKey();
+    const statusEl = document.getElementById('tdPriceStatus');
+    if(!key){
+      statusEl.textContent = 'Add a free ' + provider.label + ' key above and hit Refresh \u2014 or click any price to type it in by hand.';
+      return;
+    }
+    const tickers = allTickers();
+    const delayMs = Math.ceil(60000 / provider.rpm);
+    let ok = 0, fail = 0, consecutiveFail = 0;
+    for(let i=0; i<tickers.length; i++){
+      const t = tickers[i];
+      statusEl.textContent = 'Fetching ' + (i+1) + ' of ' + tickers.length + ' (' + t + ')' + (provider.rpm < 20 ? ' \u2014 pacing for ' + provider.label + '\u2019s rate limit, this may take a bit' : '') + '...';
+      try{
+        const res = await fetch(provider.buildUrl(t, key));
+        if(!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        const parsed = provider.parse(data);
+        priceStore[t] = { price:parsed.price, dp:parsed.dp, source:'live', asOf:new Date().toISOString(), provider:providerId };
+        ok++; consecutiveFail = 0;
+      }catch(e){
+        fail++; consecutiveFail++;
+        if(consecutiveFail >= 5){
+          statusEl.textContent = 'Stopped after 5 failed calls in a row \u2014 check your ' + provider.label + ' key (or try the other provider). Click any price below to enter it by hand.';
+          lsSet(LS_KEYS.priceStore, priceStore);
+          renderOverview();
+          renderHoldingsPanel('panel-roth', DATA.holdings_roth, '01');
+          renderHoldingsPanel('panel-brokerage', DATA.holdings_brokerage, '01');
+          return;
+        }
+      }
+      if(i < tickers.length - 1) await sleep(delayMs);
+    }
+    lsSet(LS_KEYS.priceStore, priceStore);
+    const now = new Date();
+    statusEl.textContent = 'Updated ' + ok + ' of ' + tickers.length + ' tickers \u00b7 ' + now.toLocaleTimeString() + (fail ? (' \u00b7 ' + fail + ' need a manual entry (click the price)') : '');
+    renderOverview();
+    renderHoldingsPanel('panel-roth', DATA.holdings_roth, '01');
+    renderHoldingsPanel('panel-brokerage', DATA.holdings_brokerage, '01');
+  }
+
+  function manualEditPrice(ticker){
+    const existing = priceStore[ticker] ? priceStore[ticker].price : '';
+    const v = prompt('Current price for ' + ticker + ':', existing);
+    if(v === null) return;
+    const num = parseFloat(v);
+    if(isNaN(num)) return;
+    priceStore[ticker] = { price:num, dp: (priceStore[ticker] ? priceStore[ticker].dp : 0), source:'manual', asOf:new Date().toISOString() };
+    lsSet(LS_KEYS.priceStore, priceStore);
+    renderOverview();
+    renderHoldingsPanel('panel-roth', DATA.holdings_roth, '01');
+    renderHoldingsPanel('panel-brokerage', DATA.holdings_brokerage, '01');
+  }
+
+  // click-to-edit works no matter how many times panels re-render, since it's delegated on document
+  document.addEventListener('click', function(e){
+    const el = e.target.closest('.td-price-live, .td-price-empty');
+    if(!el) return;
+    const ticker = el.getAttribute('data-ticker');
+    if(ticker) manualEditPrice(ticker);
+  });
+
+  function priceLineHTML(ticker, shares, costBasis){
+    const p = priceStore[ticker];
+    if(!p || p.price == null){
+      return '<span class="td-price-empty" data-ticker="' + ticker + '">no price &middot; click to add</span>';
+    }
+    const dp = (typeof p.dp === 'number') ? p.dp : null;
+    const chgClass = (dp > 0) ? 'up' : (dp < 0 ? 'down' : 'flat');
+    const chgArrow = (dp > 0) ? '\u25b2' : (dp < 0 ? '\u25bc' : '\u2014');
+    let chgHTML = (dp !== null) ? ' <span class="chg ' + chgClass + '">' + chgArrow + Math.abs(dp).toFixed(1) + '%</span>' : '';
+    let glHTML = '';
+    if(shares && shares > 0 && costBasis){
+      const mv = p.price * shares;
+      const gl = mv - costBasis;
+      const glPct = (gl / costBasis * 100);
+      const glClass = gl >= 0 ? 'up' : 'down';
+      glHTML = ' <span class="gl ' + glClass + '">' + (gl >= 0 ? '+' : '') + fmt$(gl,0) + ' (' + (glPct >= 0 ? '+' : '') + glPct.toFixed(0) + '%)</span>';
+    }
+    const srcHTML = p.source === 'manual' ? ' <span class="src-manual">[manual]</span>' : '';
+    return '<span class="td-price-live" data-ticker="' + ticker + '">$' + p.price.toFixed(2) + chgHTML + glHTML + srcHTML + '</span>';
+  }
+
+  // ---------------- helpers ----------------
+  function fmt$(n, decimals){
+    decimals = decimals===undefined ? 0 : decimals;
+    return '$' + Number(n).toLocaleString('en-US', {minimumFractionDigits:decimals, maximumFractionDigits:decimals});
+  }
+  function parseScoreNum(s){
+    if(!s) return null;
+    const m = String(s).match(/(\d+)(?:-(\d+))?\s*\/\s*15/);
+    if(!m) return null;
+    return parseInt(m[2]||m[1], 10);
+  }
+  function scoreTier(n){
+    if(n>=11) return 'tier-hedge';
+    if(n>=4) return 'tier-mid';
+    return 'tier-low';
+  }
+  function scoreBarHTML(scoreStr){
+    const n = parseScoreNum(scoreStr);
+    if(n===null) return '';
+    const tier = scoreTier(n);
+    let groups = '';
+    for(let g=0; g<5; g++){
+      let ticks = '';
+      for(let t=0; t<3; t++){
+        const idx = g*3+t;
+        const filled = idx < n;
+        ticks += '<span class="td-score-tick' + (filled ? ' filled ' + tier : '') + '"></span>';
+      }
+      groups += '<span class="td-score-group">' + ticks + '</span>';
+    }
+    return '<span class="td-score"><span class="td-score-groups">' + groups + '</span><span class="td-score-label">' + scoreStr.split(' ')[0] + '</span></span>';
+  }
+  function badgeHTML(status){
+    const map = {
+      'hold': ['HOLD','b-hold'],
+      'hold-no-trim': ['HOLD &ndash; NO TRIM','b-noTrim'],
+      'new-hold': ['NEW BUY','b-new'],
+      'grow': ['GROW','b-hold'],
+      'watch': ['WATCH','b-watch'],
+      'exit': ['EXIT CANDIDATE','b-exit'],
+      'target': ['TARGET BUY','b-target'],
+      'patient': ['PATIENT PLAY','b-patient'],
+      'evaluate': ['EVALUATE','b-watch']
+    };
+    const v = map[status] || [status.toUpperCase(), 'b-hold'];
+    return '<span class="td-badge ' + v[1] + '">' + v[0] + '</span>';
+  }
+
+  // ---------------- Overview ----------------
+  // ---------------- What's The Latest (synthesized briefing) ----------------
+  function priceCheckSentence(cfg){
+    const live = priceStore[cfg.ticker];
+    if(!live || live.price == null) return null;
+    const price = live.price;
+    let text, cls;
+    if(cfg.targetLow && cfg.targetHigh){
+      if(price < cfg.targetLow){ text = '$' + price.toFixed(2) + ' \u2014 below your $' + cfg.targetLow + '\u2013' + cfg.targetHigh + ' window.'; cls='up'; }
+      else if(price <= cfg.targetHigh){ text = '$' + price.toFixed(2) + ' \u2014 inside your $' + cfg.targetLow + '\u2013' + cfg.targetHigh + ' window right now.'; cls='up'; }
+      else { text = '$' + price.toFixed(2) + ' \u2014 above your $' + cfg.targetLow + '\u2013' + cfg.targetHigh + ' window.'; cls='down'; }
+    } else if(cfg.costPerShare){
+      const glPct = ((price - cfg.costPerShare) / cfg.costPerShare * 100);
+      text = '$' + price.toFixed(2) + ' \u00b7 ' + (glPct>=0?'+':'') + glPct.toFixed(0) + '% vs your cost.';
+      cls = glPct>=0 ? 'up' : 'down';
+    } else { text = '$' + price.toFixed(2); cls=''; }
+    return '<span class="tkr">' + cfg.ticker + '</span> ' + text.replace(/^(\$[\d.]+)/, '<span class="'+cls+'">$1</span>');
+  }
+
+  function renderLatestHTML(){
+    const now = new Date();
+    const lastVisitRaw = SESSION_LAST_VISIT;
+
+    // 1. price-check tickers
+    const pcLines = DATA.price_check_config.map(priceCheckSentence).filter(Boolean);
+
+    // 2. notable movers today (|daily change| >= 3%), excluding ones already in price-check
+    const pcTickers = DATA.price_check_config.map(c=>c.ticker);
+    const movers = [];
+    DATA.holdings_roth.concat(DATA.holdings_brokerage).forEach(h=>{
+      const p = priceStore[h.ticker];
+      if(p && typeof p.dp === 'number' && Math.abs(p.dp) >= 3 && !pcTickers.includes(h.ticker)){
+        movers.push({ ticker:h.ticker, dp:p.dp });
+      }
+    });
+    movers.sort((a,b)=>Math.abs(b.dp)-Math.abs(a.dp));
+
+    // 3. still-open urgent + this-month actions
+    const checked = loadChecked();
+    const openUrgent = DATA.pending_actions.urgent.filter(a=>!checked[a.id]);
+    const openMonth = DATA.pending_actions.this_month.filter(a=>!checked[a.id]);
+
+    // 4. recently logged journal entries
+    const recentLog = getAllJournalEntries().slice(-2).reverse();
+
+    // 5. next up catalysts
+    const nextCatalysts = DATA.catalysts.slice(0, 2);
+
+    // 6. cached news freshness
+    const newsCache = lsGet(LS_KEYS.newsCache, {});
+    const newsTickers = Object.keys(newsCache);
+
+    let html = '<div class="td-latest">';
+    html += '<div class="td-latest-title"><span class="dot"></span>WHAT\u2019S THE LATEST</div>';
+    html += '<div class="td-latest-visit">' + (lastVisitRaw ? 'Last time you opened this: ' + new Date(lastVisitRaw).toLocaleString() : 'First time this browser has opened the dashboard') + ' \u00b7 now: ' + now.toLocaleString() + '</div>';
+    html += '<div class="td-latest-grid">';
+
+    html += '<div class="td-latest-block"><div class="td-latest-label">Price Check</div>';
+    if(pcLines.length){ pcLines.forEach(l=>{ html += '<div class="td-latest-line">' + l + '</div>'; }); }
+    else { html += '<div class="td-latest-empty">No live prices yet \u2014 hit Refresh Prices above.</div>'; }
+    html += '</div>';
+
+    html += '<div class="td-latest-block"><div class="td-latest-label">Notable Moves Today</div>';
+    if(movers.length){ movers.slice(0,5).forEach(m=>{ const cls = m.dp>0?'up':'down'; const arrow = m.dp>0?'\u25b2':'\u25bc'; html += '<div class="td-latest-line"><span class="tkr">' + m.ticker + '</span> <span class="' + cls + '">' + arrow + Math.abs(m.dp).toFixed(1) + '%</span></div>'; }); }
+    else { html += '<div class="td-latest-empty">Nothing moving more than 3% right now.</div>'; }
+    html += '</div>';
+
+    html += '<div class="td-latest-block"><div class="td-latest-label">Still Open</div>';
+    if(openUrgent.length || openMonth.length){
+      openUrgent.forEach(a=>{ html += '<div class="td-latest-line"><span class="down">URGENT</span> \u2014 ' + a.text + '</div>'; });
+      openMonth.forEach(a=>{ html += '<div class="td-latest-line">' + a.text + '</div>'; });
+    } else { html += '<div class="td-latest-empty">All urgent / this-month actions checked off.</div>'; }
+    html += '</div>';
+
+    html += '<div class="td-latest-block"><div class="td-latest-label">Recently Logged</div>';
+    if(recentLog.length){ recentLog.forEach(j=>{ html += '<div class="td-latest-line"><span class="tkr">' + j.ticker + '</span> \u00b7 ' + j.date + ' \u2014 ' + (j.detail||j.event) + '</div>'; }); }
+    else { html += '<div class="td-latest-empty">Nothing logged yet.</div>'; }
+    html += '</div>';
+
+    html += '<div class="td-latest-block"><div class="td-latest-label">Coming Up</div>';
+    nextCatalysts.forEach(c=>{ html += '<div class="td-latest-line">' + c.date + ' \u2014 ' + c.event + '</div>'; });
+    html += '</div>';
+
+    html += '<div class="td-latest-block"><div class="td-latest-label">Headlines On File</div>';
+    if(newsTickers.length){
+      const mostRecentAsOf = newsTickers.map(t=>newsCache[t].asOf).sort().slice(-1)[0];
+      html += '<div class="td-latest-line">' + newsTickers.join(', ') + ' \u2014 pulled ' + new Date(mostRecentAsOf).toLocaleString() + '. Full list on the News tab.</div>';
+    } else { html += '<div class="td-latest-empty">No headlines pulled yet \u2014 visit the News tab.</div>'; }
+    html += '</div>';
+
+    html += '</div></div>';
+
+    return html;
+  }
+
+  function renderOverview(){
+    const el = document.getElementById('panel-overview');
+    const acc = DATA.accounts;
+    let html = '';
+    html += renderLatestHTML();
+    html += '<div class="td-section-title"><span class="n">01</span>ACCOUNTS</div>';
+    html += '<div class="td-grid">';
+    Object.keys(acc).forEach(k=>{
+      const a = acc[k];
+      html += '<div class="td-card"><div class="td-card-label">' + a.label + '</div><div class="td-card-value">' + fmt$(a.value, 2) + '</div><div class="td-card-sub">' + a.custodian + ' &middot; ' + a.tax + '</div></div>';
+    });
+    html += '</div>';
+
+    // category allocation (cost basis across both holding accounts)
+    const cats = {};
+    DATA.holdings_roth.concat(DATA.holdings_brokerage).forEach(h=>{
+      cats[h.category] = (cats[h.category]||0) + h.cost_basis;
+    });
+    const totalCost = Object.values(cats).reduce((a,b)=>a+b,0);
+    html += '<div class="td-section-title"><span class="n">02</span>POSITION MIX &middot; COST BASIS</div>';
+    html += '<div class="td-catbar">';
+    Object.keys(cats).forEach(c=>{
+      const pct = (cats[c]/totalCost*100);
+      html += '<div class="td-catbar-seg" style="width:' + pct + '%; background:' + CAT_COLOR[c] + '"></div>';
+    });
+    html += '</div>';
+    html += '<div class="td-catlegend">';
+    Object.keys(cats).forEach(c=>{
+      const pct = (cats[c]/totalCost*100).toFixed(1);
+      html += '<div class="item"><span class="sw" style="background:' + CAT_COLOR[c] + '"></span>' + CAT_LABEL[c] + ' &middot; ' + pct + '%</div>';
+    });
+    html += '</div>';
+    html += '<div class="td-note">Cost-basis weighted, not market value &mdash; big winners will understate their actual current weight in this view.</div>';
+
+    // live estimate, only for positions that have a price on file
+    let liveTotal = 0, liveCostCovered = 0, pricedCount = 0;
+    DATA.holdings_roth.concat(DATA.holdings_brokerage).forEach(h=>{
+      const p = priceStore[h.ticker];
+      if(p && p.price != null && h.shares){
+        liveTotal += p.price * h.shares;
+        liveCostCovered += h.cost_basis;
+        pricedCount++;
+      }
+    });
+    if(pricedCount > 0){
+      const gl = liveTotal - liveCostCovered;
+      const glPct = liveCostCovered ? (gl/liveCostCovered*100) : 0;
+      html += '<div class="td-card" style="margin-bottom:26px;max-width:340px;"><div class="td-card-label">Live Position Estimate &middot; ' + pricedCount + ' priced</div><div class="td-card-value">' + fmt$(liveTotal,0) + '</div><div class="td-card-sub ' + (gl>=0?'':'') + '">' + (gl>=0?'+':'') + fmt$(gl,0) + ' (' + (glPct>=0?'+':'') + glPct.toFixed(0) + '%) vs cost on priced positions</div></div>';
+    }
+
+    html += '<div class="td-section-title"><span class="n">03</span>PRICE CHECK &middot; DECISION-CRITICAL TICKERS</div>';
+    html += '<div class="td-pricecheck">';
+    DATA.price_check_config.forEach(p=>{
+      const live = priceStore[p.ticker];
+      let priceHTML, vsText, tone;
+      if(!live || live.price == null){
+        priceHTML = '<span class="td-price-empty" data-ticker="' + p.ticker + '">click to add</span>';
+        vsText = p.label;
+        tone = 'flat';
+      } else {
+        const price = live.price;
+        priceHTML = '<span class="td-price-live" data-ticker="' + p.ticker + '">$' + price.toFixed(2) + (live.source==='manual' ? ' <span class="src-manual">[manual]</span>' : '') + '</span>';
+        if(p.targetLow && p.targetHigh){
+          if(price < p.targetLow){ vsText = 'Below your $' + p.targetLow + '&ndash;' + p.targetHigh + ' window &mdash; possible better entry.'; tone='up'; }
+          else if(price <= p.targetHigh){ vsText = 'Inside your $' + p.targetLow + '&ndash;' + p.targetHigh + ' window right now.'; tone='flat'; }
+          else { vsText = 'Above your $' + p.targetLow + '&ndash;' + p.targetHigh + ' window.'; tone='down'; }
+        } else if(p.costPerShare){
+          const glPct = ((price - p.costPerShare) / p.costPerShare * 100);
+          vsText = (glPct>=0?'+':'') + glPct.toFixed(0) + '% vs your $' + p.costPerShare.toFixed(2) + ' cost/share.';
+          tone = glPct>=0 ? 'up' : 'down';
+        } else { vsText = p.label; tone = 'flat'; }
+      }
+      html += '<div class="td-pc-card"><div class="td-pc-top"><span class="td-pc-ticker">' + p.ticker + '</span><span class="td-pc-price ' + tone + '">' + priceHTML + '</span></div><div class="td-pc-range">' + p.label + '</div><div class="td-pc-vs">' + vsText + '</div></div>';
+    });
+    html += '</div>';
+    html += '<div class="td-note" style="margin-top:0;">Live where you\u2019ve added a key or a manual value &middot; click any price to correct it.</div>';
+
+    html += '<div class="td-section-title"><span class="n">04</span>OWNED STRUCTURAL HEDGES</div>';
+    html += '<div class="td-holdings" style="margin-bottom:28px">';
+    DATA.framework_universe.hedges.filter(h=>h.owned).forEach(h=>{
+      html += '<div class="td-holding cat-hedge" style="grid-template-columns:80px 1fr auto;"><div class="td-hticker">' + h.ticker + '</div><div class="td-hnotes">' + h.note + '</div>' + scoreBarHTML(h.score) + '</div>';
+    });
+    html += '</div>';
+
+    html += '<div class="td-section-title"><span class="n">05</span>MOST RECENT LOG</div>';
+    html += '<div class="td-timeline" style="margin-bottom:10px">';
+    getAllJournalEntries().slice(-3).reverse().forEach(j=>{
+      html += tlItemHTML(j, false);
+    });
+    html += '</div>';
+
+    el.innerHTML = html;
+
+    document.getElementById('tdTotalNum').textContent = fmt$(DATA.total_investable, 2);
+    const pct = (DATA.total_investable / DATA.meta.portfolio_target * 100);
+    document.getElementById('tdTargetPct').textContent = pct.toFixed(1) + '% of ' + fmt$(DATA.meta.portfolio_target);
+    document.getElementById('tdTargetFill').style.width = Math.min(pct,100) + '%';
+  }
+
+  // ---------------- Holdings (Roth / Brokerage) ----------------
+  function holdingCardHTML(h){
+    let meta = '<span>' + (h.shares ? h.shares + ' sh' : 'not purchased') + '</span>';
+    meta += '<span>cost ' + fmt$(h.cost_basis,2) + '</span>';
+    if(h.yield) meta += '<span>' + h.yield + '% yld</span>';
+    if(h.concentration) meta += '<span>' + h.concentration + '% of Roth</span>';
+    if(h.purchase_date) meta += '<span>bought ' + h.purchase_date + '</span>';
+    meta += '<span>' + priceLineHTML(h.ticker, h.shares, h.cost_basis) + '</span>';
+    let right = '';
+    right += badgeHTML(h.status);
+    if(h.score) right += scoreBarHTML(h.score);
+    return '<div class="td-holding cat-' + h.category + '" data-cat="' + h.category + '">' +
+      '<div><div class="td-hticker">' + h.ticker + '</div><div class="td-hname">' + h.name + '</div></div>' +
+      '<div class="td-hbody"><div class="td-hmeta">' + meta + '</div><div class="td-hnotes">' + h.notes + '</div></div>' +
+      '<div class="td-hright">' + right + '</div>' +
+      '</div>';
+  }
+
+  function renderHoldingsPanel(panelId, list, sectionNum){
+    const el = document.getElementById(panelId);
+    const cats = Array.from(new Set(list.map(h=>h.category)));
+    let html = '<div class="td-section-title"><span class="n">' + sectionNum + '</span>HOLDINGS &middot; ' + list.length + ' POSITIONS</div>';
+    html += '<div class="td-filters" data-target="' + panelId + '">';
+    html += '<button class="td-filter active" data-cat="all">All &middot; ' + list.length + '</button>';
+    cats.forEach(c=>{
+      const n = list.filter(h=>h.category===c).length;
+      html += '<button class="td-filter" data-cat="' + c + '"><span class="sw" style="background:' + CAT_COLOR[c] + '"></span>' + CAT_LABEL[c] + ' &middot; ' + n + '</button>';
+    });
+    html += '</div>';
+    html += '<div class="td-holdings">';
+    list.forEach(h=>{ html += holdingCardHTML(h); });
+    html += '</div>';
+    el.innerHTML = html;
+
+    el.querySelectorAll('.td-filter').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        el.querySelectorAll('.td-filter').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const cat = btn.getAttribute('data-cat');
+        el.querySelectorAll('.td-holding').forEach(card=>{
+          card.style.display = (cat==='all' || card.getAttribute('data-cat')===cat) ? 'grid' : 'none';
+        });
+      });
+    });
+  }
+
+  // ---------------- Framework ----------------
+  function renderFramework(){
+    const el = document.getElementById('panel-framework');
+    let html = '';
+    html += '<div class="td-section-title"><span class="n">01</span>THE 5 COMPONENTS &middot; ' + DATA.framework.reference + '</div>';
+    html += '<div class="td-comp-list">';
+    DATA.framework.components.forEach(c=>{
+      html += '<div class="td-comp"><div class="td-comp-num">' + c.num + '</div><div><div class="td-comp-name">' + c.name + '</div><div class="td-comp-desc">' + c.desc + '</div></div></div>';
+    });
+    html += '</div>';
+
+    html += '<div class="td-section-title"><span class="n">02</span>STOCK UNIVERSE &middot; ~59 SCANNED</div>';
+    html += '<div class="td-universe-cols">';
+    html += '<div><div style="font-family:var(--font-mono);font-size:11px;color:var(--hedge);margin-bottom:8px;letter-spacing:.06em;">STRUCTURAL HEDGES 11&ndash;15/15</div>';
+    DATA.framework_universe.hedges.forEach(h=>{
+      html += '<div class="td-uni-item"><span class="td-uni-ticker">' + h.ticker + '</span>' + scoreBarHTML(h.score) + '<span class="td-uni-note">' + h.note + (h.target ? ' &middot; <span class="td-uni-owned">TARGET</span>' : '') + '</span>' + (h.owned ? '<span class="td-uni-owned">OWNED</span>' : '') + '</div>';
+    });
+    html += '</div>';
+    html += '<div><div style="font-family:var(--font-mono);font-size:11px;color:var(--text-dim);margin-bottom:8px;letter-spacing:.06em;">DOES NOT FIT / SKIP</div>';
+    DATA.framework_universe.skip.forEach(h=>{
+      html += '<div class="td-uni-item"><span class="td-uni-ticker">' + h.ticker + '</span><span class="td-uni-note">' + h.note + '</span></div>';
+    });
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div class="td-section-title"><span class="n">03</span>RED-DAY BEAT RATE</div>';
+    html += '<div class="td-beatrate">';
+    const maxRate = Math.max(...DATA.red_day_beat_rates.map(r=>r.rate));
+    DATA.red_day_beat_rates.forEach(r=>{
+      html += '<div class="td-beat-row"><div class="td-beat-ticker">' + r.ticker + '</div><div class="td-beat-track"><div class="td-beat-fill" style="width:' + (r.rate/maxRate*100) + '%"></div></div><div class="td-beat-pct">' + r.rate + '%</div></div>';
+    });
+    html += '</div>';
+
+    html += '<div class="td-section-title"><span class="n">04</span>ACCOUNT PLACEMENT RULES</div>';
+    DATA.placement_rules.forEach(r=>{
+      html += '<div class="td-rule"><b>' + r.ticker + ':</b> ' + r.rule + '</div>';
+    });
+
+    html += '<div class="td-section-title" style="margin-top:26px"><span class="n">05</span>ROTH TARGET ALLOCATION</div>';
+    DATA.roth_target_allocation.forEach(r=>{
+      html += '<div class="td-rule"><b>' + r.pct + '%</b> ' + r.label + ' &mdash; ' + r.holdings + '</div>';
+    });
+
+    el.innerHTML = html;
+  }
+
+  // ---------------- Journal ----------------
+  function tlItemHTML(j, future){
+    const actionColors = {
+      'BUY':'var(--hedge)','SELL':'var(--speculative)','MILESTONE':'var(--gold)','DIVIDEND':'var(--ballast)',
+      'CONTRIBUTION':'var(--ballast)','MAJOR EVENT':'var(--gold)','ANALYST':'var(--growth)','DILUTION':'var(--speculative)',
+      'TECHNICAL':'var(--growth)','HEDGE CONFIRM':'var(--hedge)','NOTE':'var(--ballast)'
+    };
+    const color = actionColors[j.action] || 'var(--text-dim)';
+    return '<div class="td-tl-item' + (future?' future':'') + '">' +
+      '<div class="td-tl-date">' + j.date + (j.userAdded ? ' <span class="src-manual">&middot; logged by you</span>' : '') + '</div>' +
+      '<div class="td-tl-head"><span class="td-tl-ticker">' + j.ticker + '</span>' + (j.action ? '<span class="td-tl-action" style="color:' + color + ';background:' + color + '1a;">' + j.action + '</span>' : '') + '</div>' +
+      '<div class="td-tl-detail">' + (j.detail || j.event) + '</div>' +
+      '</div>';
+  }
+
+  function getUserJournal(){ return lsGet(LS_KEYS.journal, []); }
+  function saveUserJournal(list){ lsSet(LS_KEYS.journal, list); }
+  function getAllJournalEntries(){
+    const user = getUserJournal().map(e => Object.assign({}, e, {userAdded:true}));
+    return DATA.journal.concat(user).sort((a,b) => a.date < b.date ? -1 : (a.date > b.date ? 1 : 0));
+  }
+  function addJournalEntry(entry){
+    const list = getUserJournal();
+    entry.id = 'u' + Date.now();
+    list.push(entry);
+    saveUserJournal(list);
+  }
+
+  function renderJournal(){
+    const el = document.getElementById('panel-journal');
+    const todayStr = new Date().toISOString().slice(0,10);
+    let html = '<div class="td-section-title"><span class="n">01</span>DATED JOURNAL &amp; UPCOMING CATALYSTS</div>';
+
+    html += '<div class="td-addjournal" id="tdAddJournal">' +
+      '<div class="td-addjournal-row">' +
+        '<input type="date" id="tdJDate" value="' + todayStr + '">' +
+        '<input type="text" id="tdJTicker" placeholder="TICKER or topic">' +
+        '<select id="tdJAction"><option value="NOTE">NOTE</option><option value="BUY">BUY</option><option value="SELL">SELL</option><option value="MILESTONE">MILESTONE</option><option value="DIVIDEND">DIVIDEND</option><option value="ANALYST">ANALYST</option><option value="TECHNICAL">TECHNICAL</option><option value="MAJOR EVENT">MAJOR EVENT</option></select>' +
+      '</div>' +
+      '<div class="td-addjournal-row"><textarea id="tdJDetail" placeholder="What happened / what you decided..." rows="2"></textarea></div>' +
+      '<button id="tdJAddBtn">+ Add entry</button>' +
+      '</div>';
+
+    html += '<div class="td-timeline" id="tdJournalTimeline"></div>';
+    el.innerHTML = html;
+
+    function renderTimeline(){
+      const tl = document.getElementById('tdJournalTimeline');
+      let t = '';
+      getAllJournalEntries().slice().reverse().forEach(j=>{ t += tlItemHTML(j, false); });
+      t += '<div class="td-today-divider">TODAY &middot; ' + todayStr + '</div>';
+      DATA.catalysts.forEach(c=>{ t += tlItemHTML({date:c.date, ticker:c.event.split(' ')[0], action:'', detail:c.detail || c.event, event:c.event}, true); });
+      tl.innerHTML = t;
+    }
+    renderTimeline();
+
+    document.getElementById('tdJAddBtn').addEventListener('click', ()=>{
+      const date = document.getElementById('tdJDate').value || todayStr;
+      const ticker = document.getElementById('tdJTicker').value.trim().toUpperCase() || 'NOTE';
+      const action = document.getElementById('tdJAction').value;
+      const detail = document.getElementById('tdJDetail').value.trim();
+      if(!detail){ document.getElementById('tdJDetail').focus(); return; }
+      addJournalEntry({ date, ticker, action, detail });
+      document.getElementById('tdJTicker').value = '';
+      document.getElementById('tdJDetail').value = '';
+      renderTimeline();
+    });
+  }
+
+  // ---------------- News ----------------
+  function getNewsWatchlist(){
+    return Array.from(new Set(
+      DATA.price_check_config.map(p=>p.ticker).concat(DATA.framework_universe.hedges.filter(h=>h.owned).map(h=>h.ticker))
+    ));
+  }
+  let newsSelectedTickers = null; // resolved on first renderNews() call, after DATA is final
+
+  async function fetchNews(ticker, key){
+    const to = new Date();
+    const from = new Date(to.getTime() - 14*24*60*60*1000);
+    const fmt = d => d.toISOString().slice(0,10);
+    const url = 'https://finnhub.io/api/v1/company-news?symbol=' + encodeURIComponent(ticker) + '&from=' + fmt(from) + '&to=' + fmt(to) + '&token=' + encodeURIComponent(key);
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if(!Array.isArray(data)) throw new Error('unexpected response');
+    return data.sort((a,b)=>b.datetime - a.datetime).slice(0,4);
+  }
+
+  function renderNews(){
+    if(newsSelectedTickers === null){
+      newsSelectedTickers = lsGet('thesisDash_newsTickers', getNewsWatchlist());
+    }
+    const el = document.getElementById('panel-news');
+    let html = '<div class="td-section-title"><span class="n">01</span>RECENT HEADLINES</div>';
+    html += '<div class="td-news-controls">';
+    html += '<div class="td-news-tickers" id="tdNewsTickers">';
+    allTickers().forEach(t=>{
+      const checked = newsSelectedTickers.includes(t);
+      html += '<span class="td-news-chip' + (checked?' checked':'') + '" data-ticker="' + t + '">' + t + '</span>';
+    });
+    html += '</div>';
+    html += '<button class="td-news-loadbtn" id="tdNewsLoadBtn">Load News</button>';
+    html += '<div class="td-news-status" id="tdNewsStatus">Uses your Finnhub key (news isn\u2019t available on Twelve Data\u2019s free tier) \u2014 pick tickers above, last 14 days, top 4 headlines each.</div>';
+    html += '</div>';
+    html += '<div id="tdNewsResults"></div>';
+    el.innerHTML = html;
+
+    document.getElementById('tdNewsTickers').querySelectorAll('.td-news-chip').forEach(chip=>{
+      chip.addEventListener('click', ()=>{
+        const t = chip.getAttribute('data-ticker');
+        chip.classList.toggle('checked');
+        if(chip.classList.contains('checked')){
+          if(!newsSelectedTickers.includes(t)) newsSelectedTickers.push(t);
+        } else {
+          newsSelectedTickers = newsSelectedTickers.filter(x=>x!==t);
+        }
+        lsSet('thesisDash_newsTickers', newsSelectedTickers);
+      });
+    });
+
+    document.getElementById('tdNewsLoadBtn').addEventListener('click', loadNews);
+  }
+
+  async function loadNews(){
+    const statusEl = document.getElementById('tdNewsStatus');
+    const resultsEl = document.getElementById('tdNewsResults');
+    const key = getApiKey('finnhub');
+    if(!key){
+      statusEl.textContent = 'Add a Finnhub key \u2014 switch the provider dropdown up top to Finnhub, paste a key, hit Save. (You can switch back to Twelve Data for prices after; keys are kept separately.)';
+      return;
+    }
+    if(newsSelectedTickers.length === 0){
+      statusEl.textContent = 'Pick at least one ticker above.';
+      return;
+    }
+    resultsEl.innerHTML = '';
+    let ok = 0, fail = 0;
+    for(let i=0; i<newsSelectedTickers.length; i++){
+      const t = newsSelectedTickers[i];
+      statusEl.textContent = 'Loading ' + (i+1) + ' of ' + newsSelectedTickers.length + ' (' + t + ')...';
+      try{
+        const articles = await fetchNews(t, key);
+        ok++;
+        const cache = lsGet(LS_KEYS.newsCache, {});
+        cache[t] = { articles: articles.map(a=>({ headline:a.headline, url:a.url, source:a.source, datetime:a.datetime })), asOf: new Date().toISOString() };
+        lsSet(LS_KEYS.newsCache, cache);
+        let g = '<div class="td-news-group"><div class="td-news-group-head">' + t + '</div>';
+        if(articles.length === 0){
+          g += '<div class="td-news-empty">No headlines in the last 14 days.</div>';
+        } else {
+          articles.forEach(a=>{
+            const d = new Date(a.datetime * 1000);
+            g += '<div class="td-news-item"><a class="td-news-headline" href="' + a.url + '" target="_blank" rel="noopener">' + a.headline + '</a>' +
+                 '<div class="td-news-meta">' + (a.source || '') + ' \u00b7 ' + d.toLocaleDateString() + '</div></div>';
+          });
+        }
+        g += '</div>';
+        resultsEl.innerHTML += g;
+      }catch(e){
+        fail++;
+        resultsEl.innerHTML += '<div class="td-news-group"><div class="td-news-group-head">' + t + '</div><div class="td-news-empty">Couldn\u2019t load \u2014 skipped.</div></div>';
+      }
+      if(i < newsSelectedTickers.length - 1) await sleep(1100);
+    }
+    statusEl.textContent = 'Loaded ' + ok + ' of ' + newsSelectedTickers.length + ' \u00b7 ' + new Date().toLocaleTimeString() + (fail ? (' \u00b7 ' + fail + ' failed') : '');
+  }
+
+  // ---------------- Actions ----------------
+  function loadChecked(){ return lsGet(LS_KEYS.checked, {}); }
+  function saveChecked(state){ lsSet(LS_KEYS.checked, state); }
+  function renderActions(){
+    const el = document.getElementById('panel-actions');
+    const checked = loadChecked();
+    function group(title, items, cls){
+      let h = '<div class="td-actgroup ' + cls + '"><div class="td-act-heading">' + title + '<span class="count">' + items.length + '</span></div>';
+      items.forEach(it=>{
+        const isDone = !!checked[it.id];
+        h += '<div class="td-act-item' + (isDone?' done':'') + '" data-id="' + it.id + '"><div class="td-checkbox">' + (isDone?'&#10003;':'') + '</div><div class="td-act-text">' + it.text + '</div></div>';
+      });
+      h += '</div>';
+      return h;
+    }
+    let html = '<div class="td-section-title"><span class="n">01</span>PENDING ACTIONS</div>';
+    html += group('URGENT', DATA.pending_actions.urgent, 'urgent');
+    html += group('THIS MONTH', DATA.pending_actions.this_month, 'month');
+    html += group('ONGOING', DATA.pending_actions.ongoing, 'ongoing');
+
+    html += '<div class="td-section-title"><span class="n">02</span>DECISIONS ON RECORD</div>';
+    html += '<div class="td-decision-log">';
+    DATA.user_decisions.forEach(d=>{ html += '<div class="td-decision">' + d + '</div>'; });
+    html += '</div>';
+
+    html += '<div class="td-section-title" style="margin-top:26px"><span class="n">03</span>INVESTING RULES</div>';
+    html += '<div class="td-rules-list">';
+    DATA.investing_rules.forEach((r,i)=>{ html += '<div class="td-rule-item"><span class="td-rule-num">' + (i+1) + '</span><span>' + r + '</span></div>'; });
+    html += '</div>';
+
+    el.innerHTML = html;
+
+    el.querySelectorAll('.td-act-item').forEach(item=>{
+      item.addEventListener('click', ()=>{
+        const id = item.getAttribute('data-id');
+        checked[id] = !checked[id];
+        item.classList.toggle('done', !!checked[id]);
+        item.querySelector('.td-checkbox').innerHTML = checked[id] ? '&#10003;' : '';
+        saveChecked(checked);
+      });
+    });
+  }
+
+  // ---------------- Retirement ----------------
+  function renderRetirement(){
+    const el = document.getElementById('panel-retirement');
+    let html = '<div class="td-section-title"><span class="n">01</span>PATH TO ' + fmt$(DATA.meta.portfolio_target) + '</div>';
+    html += '<div class="td-retire-cards">';
+    const a50 = DATA.retirement.age_50, a55 = DATA.retirement.age_55;
+    html += '<div class="td-retire-card notviable"><div style="display:flex;justify-content:space-between;align-items:center;"><div class="td-retire-age">Age 50</div><span class="td-retire-tag no">Not viable</span></div><div class="td-retire-body">' + a50.reason + '</div></div>';
+    html += '<div class="td-retire-card viable"><div style="display:flex;justify-content:space-between;align-items:center;"><div class="td-retire-age">Age 55</div><span class="td-retire-tag yes">Viable</span></div><div class="td-retire-body">Projects to <span class="td-retire-num">' + fmt$(a55.at_12pct) + '</span> at 12% return &middot; <span class="td-retire-num">' + fmt$(a55.monthly_income) + '/mo</span> at 4% draw.<br><br>' + a55.note + '</div></div>';
+    html += '</div>';
+    html += '<div class="td-note" style="margin-top:0;">Target retirement income goal: ' + fmt$(DATA.meta.retirement_income_goal) + '/yr &middot; target age ' + DATA.meta.retirement_target_age + '</div>';
+    el.innerHTML = html;
+  }
+
+  // ---------------- Tabs ----------------
+  function initTabs(){
+    document.querySelectorAll('.td-tab').forEach(tab=>{
+      tab.addEventListener('click', ()=>{
+        document.querySelectorAll('.td-tab').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.td-panel').forEach(p=>p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('panel-' + tab.getAttribute('data-panel')).classList.add('active');
+      });
+    });
+  }
+
+  // ---------------- Price bar wiring ----------------
+  function initPriceBar(){
+    const providerSelect = document.getElementById('tdProviderSelect');
+    const keyInput = document.getElementById('tdApiKeyInput');
+    const saveBtn = document.getElementById('tdSaveKeyBtn');
+    const refreshBtn = document.getElementById('tdRefreshBtn');
+    const statusEl = document.getElementById('tdPriceStatus');
+    const signupLink = document.getElementById('tdSignupLink');
+
+    providerSelect.value = getProvider();
+    keyInput.value = getApiKey(providerSelect.value);
+    signupLink.href = PROVIDERS[providerSelect.value].signupUrl;
+
+    providerSelect.addEventListener('change', ()=>{
+      lsSet(LS_KEYS.provider, providerSelect.value);
+      keyInput.value = getApiKey(providerSelect.value);
+      signupLink.href = PROVIDERS[providerSelect.value].signupUrl;
+      statusEl.textContent = 'Switched to ' + PROVIDERS[providerSelect.value].label + '. Paste its key and hit Refresh.';
+    });
+    saveBtn.addEventListener('click', ()=>{
+      setApiKey(providerSelect.value, keyInput.value.trim());
+      statusEl.textContent = 'Key saved for ' + PROVIDERS[providerSelect.value].label + '. Hit Refresh Prices whenever you want an update.';
+    });
+    refreshBtn.addEventListener('click', ()=>{
+      if(keyInput.value.trim() && keyInput.value.trim() !== getApiKey(providerSelect.value)){
+        setApiKey(providerSelect.value, keyInput.value.trim());
+      }
+      refreshPrices();
+    });
+    const hasAny = Object.keys(priceStore).length > 0;
+    if(hasAny){
+      statusEl.textContent = Object.keys(priceStore).length + ' tickers have a saved price \u2014 hit Refresh for the latest.';
+    }
+  }
+
+  // ---------------- Data bar wiring ----------------
+  function initDataBar(){
+    const ownerInput = document.getElementById('tdGhOwner');
+    const repoInput = document.getElementById('tdGhRepo');
+    const pathInput = document.getElementById('tdGhPath');
+    const tokenInput = document.getElementById('tdGhToken');
+    const saveBtn = document.getElementById('tdGhSaveBtn');
+    const cfg = lsGet(LS_KEYS.githubCfg, null);
+    if(cfg){
+      ownerInput.value = cfg.owner || '';
+      repoInput.value = cfg.repo || '';
+      pathInput.value = cfg.path || 'data.json';
+      tokenInput.value = cfg.token || '';
+    }
+    saveBtn.addEventListener('click', async ()=>{
+      lsSet(LS_KEYS.githubCfg, {
+        owner: ownerInput.value.trim(),
+        repo: repoInput.value.trim(),
+        path: pathInput.value.trim() || 'data.json',
+        token: tokenInput.value.trim()
+      });
+      const ok = await loadDataFromGitHub();
+      if(ok){
+        newsSelectedTickers = null; // recompute watchlist against the newly-loaded portfolio
+        renderAll();
+      }
+    });
+  }
+
+  // ---------------- render everything (used at boot and after a data source swap) ----------------
+  function renderAll(){
+    renderOverview();
+    renderHoldingsPanel('panel-roth', DATA.holdings_roth, '01');
+    renderHoldingsPanel('panel-brokerage', DATA.holdings_brokerage, '01');
+    renderFramework();
+    renderJournal();
+    renderNews();
+    renderActions();
+    renderRetirement();
+  }
+
+  // ---------------- init ----------------
+  async function bootstrap(){
+    await loadDataFromGitHub(); // no-op, falls back silently, if nothing configured yet
+    renderAll();
+    initTabs();
+    initPriceBar();
+    initDataBar();
+  }
+  bootstrap();
+})();
+</script>
