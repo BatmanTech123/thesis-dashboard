@@ -457,6 +457,22 @@
 .td-latest-line .down { color: var(--speculative); }
 .td-latest-empty { font-size: 12px; color: var(--text-dim); font-style: italic; }
 
+.td-sheet-flavor {
+  font-family: var(--font-mono); font-size: 12.5px; color: var(--text); margin-bottom: 8px;
+}
+.td-sheet-flavor b { color: var(--gold); }
+.td-sheet-xp-label { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); margin-bottom: 6px; }
+.td-stat-block { margin-bottom: 20px; }
+.td-stat-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.td-stat-name { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); }
+.td-stat-desc { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+.td-stat-track { height: 10px; background: var(--surface2); border-radius: 4px; overflow: hidden; border: 1px solid var(--border-soft); }
+.td-stat-fill { height: 100%; transition: width 0.3s ease; }
+.td-stat-fill.good { background: linear-gradient(90deg, var(--hedge-dim), var(--hedge)); }
+.td-stat-fill.mid { background: linear-gradient(90deg, var(--growth-dim), var(--growth)); }
+.td-stat-fill.bad { background: linear-gradient(90deg, var(--speculative-dim), var(--speculative)); }
+.td-stat-sub { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-dim); margin-top: 5px; }
+
 .td-footer {
   padding: 14px 32px; border-top: 1px solid var(--border); background: var(--surface);
   font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); text-align: center;
@@ -512,6 +528,7 @@
     <button class="td-tab" data-panel="journal">JOURNAL</button>
     <button class="td-tab" data-panel="news">NEWS</button>
     <button class="td-tab" data-panel="actions">ACTIONS</button>
+    <button class="td-tab" data-panel="sheet">SHEET</button>
     <button class="td-tab" data-panel="retirement">RETIREMENT</button>
   </nav>
 
@@ -523,6 +540,7 @@
     <section class="td-panel" id="panel-journal"></section>
     <section class="td-panel" id="panel-news"></section>
     <section class="td-panel" id="panel-actions"></section>
+    <section class="td-panel" id="panel-sheet"></section>
     <section class="td-panel" id="panel-retirement"></section>
   </main>
 
@@ -624,7 +642,7 @@
   let DATA = DEFAULT_DATA; // gets replaced if a private GitHub data.json loads successfully
 
   // ---------------- local storage layer (standalone-friendly, no window.storage) ----------------
-  const LS_KEYS = { apiKey:'thesisDash_finnhubKey', provider:'thesisDash_provider', priceStore:'thesisDash_priceStore', checked:'thesisDash_actionsChecked', journal:'thesisDash_userJournal', newsCache:'thesisDash_newsCache', lastVisit:'thesisDash_lastVisit', githubCfg:'thesisDash_githubCfg', githubSha:'thesisDash_githubSha' };
+  const LS_KEYS = { apiKey:'thesisDash_finnhubKey', provider:'thesisDash_provider', priceStore:'thesisDash_priceStore', checked:'thesisDash_actionsChecked', journal:'thesisDash_userJournal', newsCache:'thesisDash_newsCache', lastVisit:'thesisDash_lastVisit', githubCfg:'thesisDash_githubCfg', githubSha:'thesisDash_githubSha', actionFirstSeen:'thesisDash_actionFirstSeen' };
   function lsGet(key, fallback){
     try{ const v = localStorage.getItem(key); return v===null ? fallback : JSON.parse(v); }
     catch(e){ return fallback; }
@@ -740,6 +758,7 @@
           renderOverview();
           renderHoldingsPanel('panel-roth', DATA.holdings_roth, '01');
           renderHoldingsPanel('panel-brokerage', DATA.holdings_brokerage, '01');
+          renderSheet();
           return;
         }
       }
@@ -751,6 +770,7 @@
     renderOverview();
     renderHoldingsPanel('panel-roth', DATA.holdings_roth, '01');
     renderHoldingsPanel('panel-brokerage', DATA.holdings_brokerage, '01');
+    renderSheet();
   }
 
   function manualEditPrice(ticker){
@@ -764,6 +784,7 @@
     renderOverview();
     renderHoldingsPanel('panel-roth', DATA.holdings_roth, '01');
     renderHoldingsPanel('panel-brokerage', DATA.holdings_brokerage, '01');
+    renderSheet();
   }
 
   // click-to-edit works no matter how many times panels re-render, since it's delegated on document
@@ -1195,6 +1216,7 @@
       document.getElementById('tdJTicker').value = '';
       document.getElementById('tdJDetail').value = '';
       renderTimeline();
+      renderSheet();
     });
   }
 
@@ -1336,8 +1358,121 @@
         item.classList.toggle('done', !!checked[id]);
         item.querySelector('.td-checkbox').innerHTML = checked[id] ? '&#10003;' : '';
         saveChecked(checked);
+        renderSheet();
       });
     });
+  }
+
+  // ---------------- Thesis Integrity Sheet (the surprise) ----------------
+  function computeThesisSheet(){
+    const now = new Date();
+
+    // Discipline: how recently you've actually logged something (matches your weekly-scan rule)
+    const allJournal = getAllJournalEntries();
+    let daysSinceLog = null;
+    if(allJournal.length){
+      const lastDate = allJournal.map(j=>j.date).sort().slice(-1)[0];
+      daysSinceLog = Math.floor((now - new Date(lastDate)) / 86400000);
+    }
+    let discipline;
+    if(daysSinceLog === null) discipline = 0;
+    else if(daysSinceLog <= 7) discipline = 100;
+    else discipline = Math.max(0, 100 - (daysSinceLog - 7) * 10);
+    const disciplineLabel = discipline >= 80 ? 'Sharp' : discipline >= 50 ? 'Slipping' : discipline >= 20 ? 'Rusty' : 'Dormant';
+
+    // Thesis Integrity: % of owned positions still in a "thesis intact" status vs under question
+    const intactStatuses = ['hold','hold-no-trim','new-hold','patient','grow'];
+    const owned = DATA.holdings_roth.concat(DATA.holdings_brokerage).filter(h=>h.shares && h.shares > 0);
+    const intactCount = owned.filter(h=>intactStatuses.includes(h.status)).length;
+    const integrity = owned.length ? Math.round(intactCount / owned.length * 100) : 100;
+    const integrityLabel = integrity >= 90 ? 'Rock Solid' : integrity >= 70 ? 'Holding' : integrity >= 50 ? 'Cracks Forming' : 'Thesis Broken';
+    const questioned = owned.filter(h=>!intactStatuses.includes(h.status));
+
+    // Backlog Fatigue: how long your oldest open urgent action has sat unchecked
+    const checked = loadChecked();
+    const firstSeen = lsGet(LS_KEYS.actionFirstSeen, {});
+    let changed = false;
+    DATA.pending_actions.urgent.concat(DATA.pending_actions.this_month).forEach(a=>{
+      if(!checked[a.id] && !firstSeen[a.id]){ firstSeen[a.id] = now.toISOString(); changed = true; }
+    });
+    if(changed) lsSet(LS_KEYS.actionFirstSeen, firstSeen);
+    const openUrgent = DATA.pending_actions.urgent.filter(a=>!checked[a.id]);
+    let oldestDays = 0;
+    openUrgent.forEach(a=>{
+      if(firstSeen[a.id]){
+        const d = Math.floor((now - new Date(firstSeen[a.id])) / 86400000);
+        if(d > oldestDays) oldestDays = d;
+      }
+    });
+    const fatigue = Math.min(100, oldestDays * 12);
+    const fatigueLabel = fatigue === 0 ? 'Clear' : fatigue <= 30 ? 'Manageable' : fatigue <= 60 ? 'Piling Up' : 'Overdue';
+
+    // Concentration Risk: your single largest flagged concentration
+    let maxConc = null, maxConcTicker = null;
+    owned.forEach(h=>{
+      if(h.concentration && (maxConc === null || h.concentration > maxConc)){ maxConc = h.concentration; maxConcTicker = h.ticker; }
+    });
+    const concLabel = maxConc === null ? 'Not flagged' : maxConc >= 20 ? 'Heavy' : maxConc >= 10 ? 'Concentrated' : 'Diversified';
+
+    // Momentum: green vs red today, across whatever's been priced
+    let green = 0, red = 0;
+    owned.forEach(h=>{
+      const p = priceStore[h.ticker];
+      if(p && typeof p.dp === 'number'){ if(p.dp > 0) green++; else if(p.dp < 0) red++; }
+    });
+    const pricedCount = green + red;
+    const momentum = pricedCount ? Math.round(green / pricedCount * 100) : null;
+    const momentumLabel = momentum === null ? 'No live prices' : momentum >= 60 ? 'Tailwind' : momentum >= 40 ? 'Choppy' : 'Headwind';
+
+    // Level / class: gamified progress toward your stated portfolio target
+    const pct = DATA.total_investable / DATA.meta.portfolio_target * 100;
+    const level = Math.min(20, Math.floor(pct / 5) + 1);
+    const xpInLevel = (pct % 5) / 5 * 100;
+
+    return { discipline, disciplineLabel, daysSinceLog, integrity, integrityLabel, questioned, fatigue, fatigueLabel,
+      oldestDays, openUrgentCount: openUrgent.length, maxConc, maxConcTicker, concLabel, momentum, momentumLabel,
+      pricedCount, level, xpInLevel, pct };
+  }
+
+  function statBarHTML(name, value, label, sub, tone){
+    return '<div class="td-stat-block">' +
+      '<div class="td-stat-row"><span class="td-stat-name">' + name + '</span><span class="td-stat-desc">' + label + (value !== null ? ' \u00b7 ' + value + '/100' : '') + '</span></div>' +
+      (value !== null ? '<div class="td-stat-track"><div class="td-stat-fill ' + tone + '" style="width:' + value + '%"></div></div>' : '') +
+      (sub ? '<div class="td-stat-sub">' + sub + '</div>' : '') +
+      '</div>';
+  }
+
+  function renderSheet(){
+    const el = document.getElementById('panel-sheet');
+    const s = computeThesisSheet();
+    let html = '<div class="td-section-title"><span class="n">01</span>THESIS INTEGRITY &middot; CHARACTER SHEET</div>';
+
+    html += '<div class="td-sheet-flavor">Class: <b>Structural Hedge Strategist</b> &middot; Level ' + s.level + ' of 20</div>';
+    html += '<div class="td-sheet-xp-label">' + s.pct.toFixed(1) + '% of the way to your $2.0M target &middot; ' + s.xpInLevel.toFixed(0) + '% XP to Level ' + Math.min(20, s.level + 1) + '</div>';
+    html += '<div class="td-stat-track" style="margin-bottom:26px;"><div class="td-stat-fill good" style="width:' + s.xpInLevel.toFixed(0) + '%"></div></div>';
+
+    html += statBarHTML('Discipline', s.discipline, s.disciplineLabel,
+      s.daysSinceLog === null ? 'No journal entries yet \u2014 log one to start this stat.' : s.daysSinceLog + ' day(s) since your last log &middot; your own rule wants \u2264 7.',
+      s.discipline >= 80 ? 'good' : s.discipline >= 50 ? 'mid' : 'bad');
+
+    html += statBarHTML('Thesis Integrity', s.integrity, s.integrityLabel,
+      s.questioned.length ? 'Under question: ' + s.questioned.map(h=>h.ticker).join(', ') : 'Every owned position still matches its written status.',
+      s.integrity >= 90 ? 'good' : s.integrity >= 50 ? 'mid' : 'bad');
+
+    html += statBarHTML('Backlog Fatigue', s.fatigue, s.fatigueLabel,
+      s.openUrgentCount ? s.openUrgentCount + ' urgent item(s) open &middot; oldest has sat ' + s.oldestDays + ' day(s).' : 'No urgent items open right now.',
+      s.fatigue === 0 ? 'good' : s.fatigue <= 60 ? 'mid' : 'bad');
+
+    html += '<div class="td-stat-block"><div class="td-stat-row"><span class="td-stat-name">Concentration Risk</span><span class="td-stat-desc">' + s.concLabel + '</span></div>' +
+      '<div class="td-stat-sub">' + (s.maxConc !== null ? s.maxConcTicker + ' is ' + s.maxConc + '% of its account.' : 'No concentration flagged in your data.') + '</div></div>';
+
+    html += s.momentum !== null
+      ? statBarHTML('Momentum', s.momentum, s.momentumLabel, s.pricedCount + ' priced position(s) checked today.', s.momentum >= 60 ? 'good' : s.momentum >= 40 ? 'mid' : 'bad')
+      : '<div class="td-stat-block"><div class="td-stat-row"><span class="td-stat-name">Momentum</span><span class="td-stat-desc">' + s.momentumLabel + '</span></div><div class="td-stat-sub">Hit Refresh Prices to populate this.</div></div>';
+
+    html += '<div class="td-note" style="margin-top:8px;">Every stat above is computed from your own data \u2014 journal dates, holding statuses, unchecked actions, live prices. Nothing here is random or decorative.</div>';
+
+    el.innerHTML = html;
   }
 
   // ---------------- Retirement ----------------
@@ -1438,6 +1573,7 @@
     renderJournal();
     renderNews();
     renderActions();
+    renderSheet();
     renderRetirement();
   }
 
