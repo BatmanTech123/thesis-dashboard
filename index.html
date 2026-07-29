@@ -343,7 +343,7 @@
 .td-pricecheck { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 8px; }
 @media (max-width: 720px) { .td-pricecheck { grid-template-columns: repeat(2, 1fr); } }
 .td-pc-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
-.td-pc-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.td-pc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; gap: 8px; }
 .td-pc-ticker { font-family: var(--font-mono); font-weight: 600; font-size: 13px; color: var(--text); }
 .td-pc-price { font-family: var(--font-mono); font-weight: 600; font-size: 15px; }
 .td-pc-price.down { color: var(--speculative); }
@@ -505,6 +505,59 @@
 .td-beat-result-pct.mid { color: var(--growth); }
 .td-beat-result-pct.bad { color: var(--speculative); }
 
+.td-spark { display: block; }
+.td-pc-spark { flex: 1; display: flex; justify-content: center; }
+
+.td-alertbar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.td-alertbar input, .td-alertbar select {
+  background: var(--surface); border: 1px solid var(--border); color: var(--text);
+  font-family: var(--font-mono); font-size: 11.5px; padding: 7px 9px; border-radius: 5px;
+}
+.td-alertbar input[type="text"]:first-child { width: 90px; text-transform: uppercase; }
+.td-alert-fired-list { margin-bottom: 14px; }
+.td-alert-fired {
+  font-family: var(--font-mono); font-size: 12px; color: var(--gold); background: rgba(232,196,104,0.08);
+  border: 1px solid var(--growth-dim); border-radius: 7px; padding: 9px 12px; margin-bottom: 7px;
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+}
+.td-alert-watch-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+.td-alert-watch {
+  font-family: var(--font-mono); font-size: 11.5px; color: var(--text-muted); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px;
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+}
+.td-alert-dismiss { font-size: 10px; color: var(--text-dim); cursor: pointer; border-bottom: 1px dotted var(--text-dim); white-space: nowrap; }
+.td-alert-dismiss:hover { color: var(--speculative); }
+
+.td-sent-tally { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); font-weight: 400; }
+.td-sent-btns { display: inline-flex; gap: 5px; margin-left: 10px; }
+.td-sent-btn { cursor: pointer; font-size: 11px; color: var(--text-dim); opacity: 0.5; }
+.td-sent-btn:hover { opacity: 1; }
+.td-sent-btn.active { opacity: 1; }
+.td-sent-btn.bullish.active { color: var(--hedge); }
+.td-sent-btn.neutral.active { color: var(--growth); }
+.td-sent-btn.bearish.active { color: var(--speculative); }
+
+.td-print-btn {
+  font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); cursor: pointer;
+  border: 1px solid var(--border); border-radius: 20px; padding: 2px 10px; margin-left: auto;
+  text-transform: none; letter-spacing: normal;
+}
+.td-print-btn:hover { color: var(--hedge); border-color: var(--hedge); }
+.td-print-only { display: none; }
+@media print {
+  body * { visibility: hidden; }
+  .td-print-only, .td-print-only * { visibility: visible; }
+  .td-print-only {
+    display: block !important; position: absolute; left: 0; top: 0; width: 100%;
+    background: #fff; color: #111; padding: 20px; font-family: Georgia, 'Times New Roman', serif;
+  }
+  .td-print-only h1 { font-family: 'IBM Plex Mono', monospace; font-size: 16px; margin-bottom: 14px; }
+  .td-print-only h2 { font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; border-bottom: 1px solid #999; padding-bottom: 4px; margin: 18px 0 8px; }
+  .td-print-only .item { font-size: 12px; line-height: 1.6; margin-bottom: 4px; }
+  .td-print-only .printfoot { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: #777; margin-top: 26px; }
+}
+
 .td-footer {
   padding: 14px 32px; border-top: 1px solid var(--border); background: var(--surface);
   font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); text-align: center;
@@ -514,11 +567,11 @@
 <div class="thesis-dash" id="thesisDash">
 
   <header class="td-masthead">
-    <div class="td-eyebrow"><span class="dot"></span>STRUCTURAL HEDGE THESIS &middot; DASHBOARD <span id="tdVersionBadge" class="td-version-badge"></span></div>
+    <div class="td-eyebrow"><span class="dot"></span>STRUCTURAL HEDGE THESIS &middot; MATHEW D. SANDERSON <span id="tdVersionBadge" class="td-version-badge"></span></div>
     <div class="td-title-row">
       <div>
         <h1 class="td-title">Portfolio Dashboard <em>&middot; standalone</em></h1>
-        <div class="td-subline" id="tdSubline">Sample data shown &middot; connect your private repo above for your real portfolio</div>
+        <div class="td-subline" id="tdSubline">Dacula, GA &middot; positions logged 2026-07-16 &middot; prices refresh live, on demand</div>
       </div>
       <div class="td-total-block">
         <div class="td-total-label">Total Investable</div>
@@ -576,9 +629,11 @@
     <section class="td-panel" id="panel-retirement"></section>
   </main>
 
-  <div class="td-footer" id="tdFooter">STRUCTURAL HEDGE FRAMEWORK DASHBOARD &middot; NOT FINANCIAL ADVICE &middot; RUNS LOCALLY, NO SERVER, NO AI &middot; DATA STAYS IN THIS BROWSER (LOCALSTORAGE) &middot; <span id="tdVersionFooter" class="td-changelog-toggle"></span>
+  <div class="td-footer" id="tdFooter">FNF 5-COMPONENT STRUCTURAL HEDGE FRAMEWORK &middot; NOT FINANCIAL ADVICE &middot; RUNS LOCALLY, NO SERVER, NO AI &middot; DATA STAYS IN THIS BROWSER (LOCALSTORAGE) &middot; <span id="tdVersionFooter" class="td-changelog-toggle"></span>
     <div class="td-changelog" id="tdChangelog" style="display:none;"></div>
   </div>
+
+  <div class="td-print-only" id="tdPrintView"></div>
 </div>
 
 <script>
@@ -595,8 +650,9 @@
   };
 
   // ---------------- App version / changelog (independent of portfolio DATA) ----------------
-  const APP_VERSION = 'v1.8.0';
+  const APP_VERSION = 'v1.9.0';
   const APP_CHANGELOG = [
+    { version:'v1.9.0', date:'2026-07-29', notes:'Added 5 API-free features: price-cross alerts, printable Sunday Scan, news sentiment tally, self-built price history + sparklines, and a correlation checker.' },
     { version:'v1.8.0', date:'2026-07-29', notes:'Added the red-day Beat-Rate Calculator (any ticker vs SPY) and this version/changelog panel.' },
     { version:'v1.7.0', date:'2026-07-29', notes:'Added 50/200-day moving average overlay to the Price Check cards.' },
     { version:'v1.6.0', date:'2026-07-28', notes:'Added the Thesis Integrity character sheet (SHEET tab).' },
@@ -607,88 +663,222 @@
   ];
 
   const DEFAULT_DATA = {
-  "meta": {
-    "portfolio_target": 1000000,
-    "retirement_income_goal": 60000,
-    "retirement_target_age": 60,
-    "last_updated": "sample"
-  },
-  "accounts": {
-    "sample_account": {
-      "label": "Sample Account",
-      "custodian": "Demo",
-      "value": 10000,
-      "tax": "taxable",
-      "notes": "Connect your private data.json above to replace this sample."
-    }
-  },
-  "total_investable": 10000,
-  "framework": {
-    "name": "Sample Structural Hedge Framework",
-    "reference": "Connect your data to see your real framework",
-    "components": [
-      {
-        "num": 1,
-        "name": "Sample component",
-        "desc": "This is placeholder data. Connect your private repo above."
-      }
-    ]
-  },
-  "holdings_roth": [
-    {
-      "ticker": "DEMO",
-      "name": "Sample Holding",
-      "category": "growth",
-      "shares": 10,
-      "cost_basis": 1000,
-      "status": "hold",
-      "notes": "This is sample data. Add your GitHub data source above to see your real portfolio."
-    }
-  ],
-  "holdings_brokerage": [],
-  "harvested_losses": [],
-  "framework_universe": {
-    "hedges": [],
-    "skip": []
-  },
-  "red_day_beat_rates": [],
-  "placement_rules": [],
-  "roth_target_allocation": [],
-  "journal": [
-    {
-      "date": "2026-01-01",
-      "ticker": "DEMO",
-      "action": "NOTE",
-      "detail": "This is a sample journal entry. Connect your private repo above to see your real log."
-    }
-  ],
-  "catalysts": [],
-  "pending_actions": {
-    "urgent": [],
-    "this_month": [],
-    "ongoing": []
-  },
-  "user_decisions": [],
-  "investing_rules": [],
-  "price_check_config": [],
-  "retirement": {
-    "age_50": {
-      "viable": false,
-      "reason": "Sample data."
+    meta: {
+      portfolio_target: 2000000,
+      retirement_income_goal: 100000,
+      retirement_target_age: 55,
+      last_updated: '2026-07-16'
     },
-    "age_55": {
-      "viable": true,
-      "at_12pct": 1000000,
-      "monthly_income": 3333,
-      "note": "Sample data \u2014 connect your private repo above."
-    }
-  }
-};
+    accounts: {
+      roth_ira: { label: 'Roth IRA', custodian: 'Fidelity', value: 95724.65, tax: 'tax-free',
+        notes: 'Primary growth engine. Never withdrawn from. Holds high-conviction growth + structural hedges.' },
+      fnf_401k: { label: 'FNF 401(k)', custodian: 'Principal', value: 153017.65, tax: 'pre-tax + Roth 401k',
+        notes: '13% contribution (7% traditional + 6% Roth), raised from 7% on Jun 26 2026.' },
+      individual_brokerage: { label: 'Individual Brokerage', custodian: 'Fidelity', value: 14283.55, tax: 'taxable',
+        notes: '64% FNF, underwater. Penny stocks harvested Jun 22. CCJ target account.' },
+      traditional_ira: { label: 'Traditional IRA', custodian: 'Fidelity', value: 116.56, tax: 'pre-tax',
+        notes: 'Dormant. SPAXX only.' }
+    },
+    total_investable: 263142.41,
 
+    framework: {
+      name: 'FNF 5-Component Structural Hedge Framework',
+      reference: 'FNF = 15/15 &middot; 5 components &middot; 3 pts each',
+      components: [
+        { num:1, name:'Tariff-immune revenue', desc:'Zero direct exposure to trade policy; revenue from services/fees not goods' },
+        { num:2, name:'Float income rises with rates', desc:'Holds client/premium funds in fixed income; higher rates = more investment income' },
+        { num:3, name:'Earnings benefit from rate stress', desc:'Business segment that profits when inflation/rate-hike fears spike' },
+        { num:4, name:'Dividend yield price floor', desc:'20+ years of dividends; yield creates natural buying support on dips' },
+        { num:5, name:'Regulatory oligopoly moat', desc:'Licensing or structural barriers make competition near-impossible' }
+      ]
+    },
+
+    holdings_roth: [
+      { ticker:'RKLB', name:'Rocket Lab USA', category:'growth', shares:144.551, cost_basis:980.78, score:'5/15 standalone, higher w/ Iridium', status:'hold-no-trim', concentration:22, notes:'Largest position. +2000%+ from cost. Iridium acquisition transformative. Neutron Q4 2026. Earnings Aug 6.' },
+      { ticker:'ASTS', name:'AST SpaceMobile', category:'growth', shares:72.037, cost_basis:2024.09, status:'hold', notes:'Direct-to-device satellite. BlueBird 8/9/10 launched Jun 17. $1B convert priced Jul 16 (dilution). Piper Sandler Overweight $100.' },
+      { ticker:'GOOG', name:'Alphabet', category:'growth', shares:20, cost_basis:730.11, status:'hold', notes:'Quality compounder. Gemini 3.5 Pro delay hit stock -4% Jul 16.' },
+      { ticker:'APLD', name:'Applied Digital', category:'growth', shares:141, cost_basis:944.79, status:'hold', notes:'AI data center landlord. $36B contracted revenue. Polaris Forge 3. Earnings Aug 20. Target $73+.' },
+      { ticker:'AB', name:'AllianceBernstein', category:'hedge', shares:125.5, cost_basis:4600.00, cost_per_share:36.65, score:'12/15', status:'new-hold', yield:9.46, purchase_date:'2026-06-17', notes:'Structural hedge. K-1 partnership - Roth placement critical. Bought near 52wk low. +$435/yr tax-free.' },
+      { ticker:'CME', name:'CME Group', category:'hedge', shares:12.45, cost_basis:3100.00, cost_per_share:249.00, score:'14/15', status:'new-hold', yield:4.28, purchase_date:'2026-06-17', notes:'Structural hedge. 73% red-day beat rate. Volatility beneficiary. Bought on CEO transition dip. +$133/yr tax-free.' },
+      { ticker:'AMZN', name:'Amazon', category:'growth', shares:20, cost_basis:2933.52, status:'hold', notes:'AWS moat.' },
+      { ticker:'AVGO', name:'Broadcom', category:'growth', shares:10, cost_basis:1755.56, status:'hold', notes:'Semi + software moat. Hit by chip selloff Jul 2026.' },
+      { ticker:'FNILX', name:'Fidelity Zero Large Cap Index', category:'ballast', shares:159.581, cost_basis:2716.44, status:'grow', current_pct:4.5, target_pct:'15-20% of Roth', notes:'Index ballast. Currently too small. Grow by trimming winners over time.' },
+      { ticker:'NVDA', name:'NVIDIA', category:'growth', shares:20, cost_basis:2546.80, score:'3/15', status:'hold', notes:'The thing hedged against. Chip selloff Jul 2026.' },
+      { ticker:'FDVV', name:'Fidelity High Dividend ETF', category:'hedge', shares:61, cost_basis:2675.96, status:'hold', yield:2.69, notes:'Dividend hedge ETF. Counts toward structural hedge bucket.' },
+      { ticker:'IBIT', name:'iShares Bitcoin Trust', category:'speculative', shares:81, cost_basis:3202.03, status:'hold', notes:'BTC institutional vehicle.' },
+      { ticker:'ABAT', name:'American Battery Technology', category:'speculative', shares:929, cost_basis:6220.46, status:'watch', notes:'Thesis repairing - first positive gross margin Q3. COO sold 115K shares Jun 15 - watch. -48% from cost.' },
+      { ticker:'NFLX', name:'Netflix', category:'growth', shares:30, cost_basis:307.37, status:'hold', notes:'Streaming moat. +740%.' },
+      { ticker:'TSLA', name:'Tesla', category:'growth', shares:5, cost_basis:489.99, status:'hold', notes:'EV thesis.' },
+      { ticker:'SHOP', name:'Shopify', category:'growth', shares:20, cost_basis:158.86, status:'hold', notes:'E-commerce moat. +1394%.' },
+      { ticker:'MSFT', name:'Microsoft', category:'growth', shares:4, cost_basis:852.56, status:'hold', notes:'Cloud moat.' },
+      { ticker:'MSTR', name:'MicroStrategy', category:'speculative', shares:2, cost_basis:799.02, status:'watch', notes:'BTC proxy. -49%.' },
+      { ticker:'CRSP', name:'CRISPR Therapeutics', category:'speculative', shares:16, cost_basis:1031.44, status:'watch', notes:'Gene editing. -13%.' },
+      { ticker:'ETH', name:'Grayscale Ethereum Staking Mini', category:'speculative', shares:84, cost_basis:2046.60, status:'hold', notes:'ETH exposure.' },
+      { ticker:'ICLN', name:'iShares Clean Energy', category:'speculative', shares:26, cost_basis:512.33, status:'watch', notes:'Clean energy ETF.' },
+      { ticker:'RING', name:'iShares MSCI Gold Miners', category:'hedge', shares:20, cost_basis:1661.37, status:'watch', notes:'Gold miners hedge.' },
+      { ticker:'MSOS', name:'AdvisorShares Pure US Cannabis', category:'speculative', shares:22, cost_basis:521.71, status:'exit', notes:'Cannabis ETF. No clear thesis fit.' },
+      { ticker:'NIO', name:'NIO Inc', category:'speculative', shares:11, cost_basis:657.80, status:'exit', notes:'Chinese EV. -91%. No thesis fit.' },
+      { ticker:'NTRB', name:'Nutriband', category:'speculative', shares:125, cost_basis:1100.00, status:'exit', notes:'-60%. No thesis fit.' },
+      { ticker:'SE', name:'Sea Limited', category:'growth', shares:3, cost_basis:375.11, status:'watch', notes:'SE Asia e-commerce.' },
+      { ticker:'DIS', name:'Disney', category:'growth', shares:9, cost_basis:898.51, status:'hold', notes:'Media.' },
+      { ticker:'RKT', name:'Rocket Companies', category:'speculative', shares:2, cost_basis:73.93, status:'watch', notes:'Mortgage origination.' }
+    ],
+
+    holdings_brokerage: [
+      { ticker:'FNF', name:'Fidelity National Financial', category:'hedge', shares:193.064, cost_basis:10408.95, cost_per_share:53.93, score:'15/15', status:'patient', notes:'Employer stock. 64% of brokerage. Underwater. PATIENT PLAY: sell at $55-62 on rate-cut signal, target Q4 2026/Q1 2027. Ex-div Jun 16. Analyst target $61-62.' },
+      { ticker:'PLTR', name:'Palantir', category:'growth', shares:10, cost_basis:153.26, status:'hold', notes:'+765%. Thesis intact. Near 52wk low - valuation compression not thesis break.' },
+      { ticker:'NOK', name:'Nokia ADR', category:'watch', shares:105, cost_basis:523.95, status:'evaluate', notes:'+197%. Evaluate thesis.' },
+      { ticker:'FG', name:'F&G Annuities & Life', category:'hedge', shares:5, cost_basis:111.76, status:'hold', notes:'FNF-adjacent small position.' },
+      { ticker:'CCJ', name:'Cameco', category:'hedge', shares:0, cost_basis:0, score:'11/15', status:'target', notes:'NOT YET PURCHASED. Buy in brokerage (Canadian withholding, Form 1116). Entry window $93-96. 73% red-day beat rate.' }
+    ],
+
+    harvested_losses: [
+      { ticker:'STKE', date:'2026-06-22', loss:-367, proceeds:95.58 },
+      { ticker:'MOGO', date:'2026-06-22', loss:-166, proceeds:89.00 },
+      { ticker:'HITI', date:'2026-06-22', loss:-451, proceeds:143.84 },
+      { ticker:'AITX', date:'2026-06-22', loss:-838, proceeds:39.26 },
+      { ticker:'CXDEF', date:'pending', loss:-596, proceeds:0, status:'HALTED - claim worthless at tax time' },
+      { ticker:'AMC', date:'n/a', loss:-118, proceeds:0, status:'user chose NOT to sell (non-financial decision)' }
+    ],
+
+    framework_universe: {
+      hedges: [
+        { ticker:'FNF', score:'15/15', note:'Reference', owned:true },
+        { ticker:'CME', score:'14/15', note:'Volume spikes on fear', owned:true },
+        { ticker:'ORI', score:'14/15', note:'Most defensive title insurer', owned:false },
+        { ticker:'FAF', score:'14/15', note:'#2 title insurer', owned:false },
+        { ticker:'CBOE', score:'13/15', note:'Owns VIX', owned:false },
+        { ticker:'MKL', score:'13/15', note:'Berkshire model', owned:false },
+        { ticker:'ADP', score:'13/15', note:'$30B payroll float', owned:false },
+        { ticker:'FG', score:'13/15', note:'Annuity spread', owned:true },
+        { ticker:'AB', score:'12/15', note:'9.46% yield', owned:true },
+        { ticker:'MET', score:'12/15', note:'Annuity float', owned:false },
+        { ticker:'PRU', score:'12/15', note:'PGIM AUM', owned:false },
+        { ticker:'ALL', score:'12/15', note:'Beta 0.55', owned:false },
+        { ticker:'AFG', score:'12/15', note:'Specialty P&C', owned:false },
+        { ticker:'VRSK', score:'12/15', note:'ISO moat like FNF', owned:false },
+        { ticker:'ICE', score:'12/15', note:'Energy derivatives', owned:false },
+        { ticker:'SPGI', score:'12/15', note:'Ratings mandated by law', owned:false },
+        { ticker:'WM', score:'12/15', note:'Landfill moat', owned:false },
+        { ticker:'RSG', score:'12/15', note:'WM copy', owned:false },
+        { ticker:'CCJ', score:'11/15', note:'Nuclear geopolitical hedge', owned:false, target:true },
+        { ticker:'IRDM', score:'11/15', note:'Now part of RKLB via acquisition', owned:false },
+        { ticker:'NDAQ', score:'11/15', note:'Exchange + tech', owned:false },
+        { ticker:'STC', score:'11/15', note:'#4 title insurer', owned:false },
+        { ticker:'CINTAS', score:'11/15', note:'40yr div streak', owned:false }
+      ],
+      skip: [
+        { ticker:'NVDA', score:'3/15', note:'OWNED. Growth not hedge' },
+        { ticker:'SMH', score:'2/15', note:'SKIP. Tariff+rate exposed. Opposite of hedge' },
+        { ticker:'ROKT', score:'5/15', note:'SKIP. Already own RKLB+PLTR directly' },
+        { ticker:'URA', score:'7/15', note:'SKIP. Own CCJ instead' },
+        { ticker:'VTI', score:'8/15', note:'FNILX does this free in Roth' },
+        { ticker:'VXUS', score:'6/15', note:'SKIP. 401k EAFE covers international' },
+        { ticker:'INTC', score:'4-5/15', note:'Pelosi bought calls. Growth not hedge. Skip' },
+        { ticker:'UBER', score:'6-7/15', note:'Pelosi bought calls. Growth-tier candidate. New thesis needed' }
+      ]
+    },
+
+    red_day_beat_rates: [
+      { ticker:'CME', rate:75, note:'OWNED' },
+      { ticker:'CCJ', rate:73, note:'TARGET' },
+      { ticker:'CBOE', rate:72 },
+      { ticker:'AB', rate:68, note:'OWNED' },
+      { ticker:'MKL', rate:67 },
+      { ticker:'VRSK', rate:66 },
+      { ticker:'FNF', rate:62, note:'Reference/OWNED' }
+    ],
+
+    placement_rules: [
+      { ticker:'AB', rule:'Roth IRA &mdash; K-1 partnership, ordinary income. +$11,700/15yr vs brokerage. OWNED.' },
+      { ticker:'CME', rule:'Roth IRA &mdash; +$5,300/15yr vs brokerage. OWNED.' },
+      { ticker:'CCJ', rule:'Brokerage &mdash; Canadian 15% withholding unrecoverable in Roth. Use Form 1116. TARGET.' },
+      { ticker:'401K', rule:'Roth 401k &mdash; marginal ~17.5% now ~ retirement rate; GA exempts $65K retirement income; no RMDs on Roth 401k. DONE Jun 26.' },
+      { ticker:'VXUS', rule:'Do NOT buy &mdash; 401k EAFE fund already provides international exposure.' }
+    ],
+
+    roth_target_allocation: [
+      { label:'High-conviction growth', pct:'40-45', holdings:'RKLB, ASTS, APLD, GOOG, AMZN, etc.' },
+      { label:'Structural hedges', pct:'20-25', holdings:'AB, CME, FDVV' },
+      { label:'Index ballast', pct:'15-20', holdings:'FNILX (currently 4.5%)' },
+      { label:'Speculative', pct:'max 10', holdings:'ABAT, IBIT, early-stage' },
+      { label:'Cash', pct:'3-5', holdings:'SPAXX' }
+    ],
+
+    journal: [
+      { date:'2026-06-16', ticker:'FNF', action:'DIVIDEND', detail:'Ex-dividend $0.52/share. ~$100 on 193 shares.' },
+      { date:'2026-06-17', ticker:'AB', action:'BUY', detail:'$4,600 @ ~$36.65, ~125.5 shares, Roth IRA. 9.46% yield. Near 52wk low. SPAXX rotation.' },
+      { date:'2026-06-17', ticker:'CME', action:'BUY', detail:'$3,100 @ ~$249, ~12.45 shares, Roth IRA. 4.28% yield. CEO Duffy transition dip. SPAXX rotation.' },
+      { date:'2026-06-17', ticker:'ASTS', action:'MILESTONE', detail:'BlueBird 8/9/10 launched successfully 2:39am EDT from Cape Canaveral. Thesis confirmed.' },
+      { date:'2026-06-22', ticker:'PENNY HARVEST', action:'SELL', detail:'STKE +$95.58, MOGO +$89, HITI +$143.84, AITX +$39.26. ~$1,822 losses harvested.' },
+      { date:'2026-06-26', ticker:'401K', action:'CONTRIBUTION', detail:'Increased 7% &rarr; 13% (7% trad + 6% Roth). Adds ~$255K at age 55 at 12%.' },
+      { date:'2026-06-29', ticker:'RKLB', action:'MAJOR EVENT', detail:'Announced $8B Iridium acquisition. $54/share cash+stock. Closes mid-2027. Stock +12-16%. Vertically integrated space co.' },
+      { date:'2026-07-02', ticker:'RKLB', action:'ANALYST', detail:'Multiple upgrades post-Iridium. BofA $115, Craig-Hallum $120, Roth $130. Consolidating ~$100.' },
+      { date:'2026-07-16', ticker:'ASTS', action:'DILUTION', detail:'Priced $1B convertible senior notes. Stock -15% to ~$57. Expected dilution for constellation buildout, not thesis break. Piper Sandler initiated Overweight $100.' },
+      { date:'2026-07-16', ticker:'RKLB', action:'TECHNICAL', detail:'-10% to 3-month low, broke 200-day SMA. Piper Sandler initiated Neutral. ~$76-80. Still +1000%+ from cost. Earnings Aug 6.' },
+      { date:'2026-07-16', ticker:'FNF', action:'HEDGE CONFIRM', detail:'Held green/flat while Nasdaq -1.47% on TSMC capex fears + GOOG Gemini delay. 8 of 11 S&P sectors green. Structural hedge working.' }
+    ],
+
+    catalysts: [
+      { date:'2026-08-06', event:'RKLB Q2 earnings', detail:'Est. EPS -$0.07, est. revenue $231.8M' },
+      { date:'2026-08-20', event:'APLD earnings' },
+      { date:'2026-08', event:'ASTS BlueBird 11/12/13 launch' },
+      { date:'2026-Q4', event:'RKLB Neutron maiden flight', detail:'Biggest near-term catalyst' },
+      { date:'2026-10', event:'FNF Q3 earnings', detail:'Patient play window' },
+      { date:'2027-mid', event:'RKLB-Iridium deal close' },
+      { date:'2028', event:'RKLB first GAAP profit', detail:'~$176M consensus' }
+    ],
+
+    pending_actions: {
+      urgent: [
+        { id:'u1', text:'Open/fund HYSA &mdash; already have one with ~$600, target $15-20K. Seed with penny stock proceeds ~$466 + ESPP.' },
+        { id:'u2', text:'Sell ESPP shares (~20 FNF from May) &rarr; HYSA.' }
+      ],
+      this_month: [
+        { id:'m1', text:'Buy CCJ in brokerage at $93-96 entry window.' },
+        { id:'m2', text:'Term life ($1M 20yr ~$50-80/mo) + disability insurance at Policygenius.' }
+      ],
+      ongoing: [
+        { id:'o1', text:'Weekly scan every Sunday &mdash; log to journal.' },
+        { id:'o2', text:'Max Roth IRA contribution $7,000 for 2026.' },
+        { id:'o3', text:'Grow FNILX toward 15-20% of Roth.' },
+        { id:'o4', text:'Watch RKLB earnings Aug 6, APLD Aug 20, ASTS BlueBird 11/12/13 August.' }
+      ]
+    },
+
+    user_decisions: [
+      'RKLB: chose NOT to trim despite 22% concentration.',
+      'AMC: chose NOT to sell (~$118 loss, non-financial decision).',
+      'FNF: patient play &mdash; hold for $55-62 recovery.',
+      'CXDEF: halted, claim worthless at tax time.'
+    ],
+
+    investing_rules: [
+      'Buy quality businesses during fear events, not speculative ones',
+      'Write the thesis before you buy, not after',
+      'Name what kills the thesis',
+      'Do not hold ESPP shares - sell promptly and redirect',
+      'The Roth is the last account you touch for cash',
+      'Do not average down on thesis-broken positions',
+      'Primary sources (SEC 8-K) outperform secondary sources'
+    ],
+
+    price_check_config: [
+      { ticker:'RKLB', label:'Largest holding', costPerShare: 980.78/144.551 },
+      { ticker:'ASTS', label:'Growth', costPerShare: 2024.09/72.037 },
+      { ticker:'FNF', label:'Patient play', costPerShare: 53.93, targetLow:55, targetHigh:62 },
+      { ticker:'CCJ', label:'Target buy', targetLow:93, targetHigh:96 }
+    ],
+
+    retirement: {
+      age_50: { viable:false, reason:'Math reaches $900K&ndash;$1.35M (only ~$3-4.5K/mo at 4%) AND 401k locked until Rule of 55. Bridge strategy: semi-retire at 50 with $30-50K outside income, full retire at 55.' },
+      age_55: { viable:true, at_12pct:2222070, monthly_income:7407, note:'Hits $2M target at 12% return with increased 401k contributions. Rule of 55 unlocks 401k penalty-free.' }
+    }
+  };
   let DATA = DEFAULT_DATA; // gets replaced if a private GitHub data.json loads successfully
 
   // ---------------- local storage layer (standalone-friendly, no window.storage) ----------------
-  const LS_KEYS = { apiKey:'thesisDash_finnhubKey', provider:'thesisDash_provider', priceStore:'thesisDash_priceStore', checked:'thesisDash_actionsChecked', journal:'thesisDash_userJournal', newsCache:'thesisDash_newsCache', lastVisit:'thesisDash_lastVisit', githubCfg:'thesisDash_githubCfg', githubSha:'thesisDash_githubSha', actionFirstSeen:'thesisDash_actionFirstSeen', maCache:'thesisDash_maCache' };
+  const LS_KEYS = { apiKey:'thesisDash_finnhubKey', provider:'thesisDash_provider', priceStore:'thesisDash_priceStore', checked:'thesisDash_actionsChecked', journal:'thesisDash_userJournal', newsCache:'thesisDash_newsCache', lastVisit:'thesisDash_lastVisit', githubCfg:'thesisDash_githubCfg', githubSha:'thesisDash_githubSha', actionFirstSeen:'thesisDash_actionFirstSeen', maCache:'thesisDash_maCache', priceHistory:'thesisDash_priceHistory', alerts:'thesisDash_alerts', headlineSentiment:'thesisDash_headlineSentiment' };
   function lsGet(key, fallback){
     try{ const v = localStorage.getItem(key); return v===null ? fallback : JSON.parse(v); }
     catch(e){ return fallback; }
@@ -728,6 +918,48 @@
 
   let priceStore = lsGet(LS_KEYS.priceStore, {});
   let maCache = lsGet(LS_KEYS.maCache, {});
+  let priceHistory = lsGet(LS_KEYS.priceHistory, {});
+  let priceAlerts = lsGet(LS_KEYS.alerts, []);
+
+  function recordPriceHistory(ticker, price){
+    const day = new Date().toISOString().slice(0,10);
+    if(!priceHistory[ticker]) priceHistory[ticker] = [];
+    const arr = priceHistory[ticker];
+    const last = arr[arr.length - 1];
+    if(last && last.date === day){ last.price = price; }
+    else { arr.push({ date: day, price: price }); if(arr.length > 180) arr.shift(); }
+    lsSet(LS_KEYS.priceHistory, priceHistory);
+  }
+
+  function sparklineSVG(ticker){
+    const hist = priceHistory[ticker];
+    if(!hist || hist.length < 3) return '';
+    const w = 90, h = 22;
+    const prices = hist.map(p=>p.price);
+    const min = Math.min(...prices), max = Math.max(...prices);
+    const range = (max - min) || 1;
+    const pts = prices.map((p,i)=>{
+      const x = (i / (prices.length - 1)) * w;
+      const y = h - ((p - min) / range) * h;
+      return x.toFixed(1) + ',' + y.toFixed(1);
+    }).join(' ');
+    const trendUp = prices[prices.length - 1] >= prices[0];
+    const color = trendUp ? 'var(--hedge)' : 'var(--speculative)';
+    return '<svg class="td-spark" viewBox="0 0 ' + w + ' ' + h + '"><polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="1.5"/></svg>';
+  }
+
+  function checkPriceAlerts(){
+    const fired = [];
+    priceAlerts.forEach(a=>{
+      if(!a.active) return;
+      const p = priceStore[a.ticker];
+      if(!p || p.price == null) return;
+      const crossed = a.direction === 'above' ? p.price >= a.target : p.price <= a.target;
+      if(crossed){ a.active = false; a.firedAt = new Date().toISOString(); a.firedPrice = p.price; fired.push(a); }
+    });
+    if(fired.length) lsSet(LS_KEYS.alerts, priceAlerts);
+    return fired;
+  }
   const SESSION_LAST_VISIT = lsGet(LS_KEYS.lastVisit, null);
   lsSet(LS_KEYS.lastVisit, new Date().toISOString());
   function getApiKey(providerId){
@@ -796,6 +1028,7 @@
         const data = await res.json();
         const parsed = provider.parse(data);
         priceStore[t] = { price:parsed.price, dp:parsed.dp, source:'live', asOf:new Date().toISOString(), provider:providerId };
+        recordPriceHistory(t, parsed.price);
         ok++; consecutiveFail = 0;
       }catch(e){
         fail++; consecutiveFail++;
@@ -814,6 +1047,7 @@
     lsSet(LS_KEYS.priceStore, priceStore);
     const now = new Date();
     statusEl.textContent = 'Updated ' + ok + ' of ' + tickers.length + ' tickers \u00b7 ' + now.toLocaleTimeString() + (fail ? (' \u00b7 ' + fail + ' need a manual entry (click the price)') : '');
+    checkPriceAlerts();
     renderOverview();
     renderHoldingsPanel('panel-roth', DATA.holdings_roth, '01');
     renderHoldingsPanel('panel-brokerage', DATA.holdings_brokerage, '01');
@@ -827,7 +1061,9 @@
     const num = parseFloat(v);
     if(isNaN(num)) return;
     priceStore[ticker] = { price:num, dp: (priceStore[ticker] ? priceStore[ticker].dp : 0), source:'manual', asOf:new Date().toISOString() };
+    recordPriceHistory(ticker, num);
     lsSet(LS_KEYS.priceStore, priceStore);
+    checkPriceAlerts();
     renderOverview();
     renderHoldingsPanel('panel-roth', DATA.holdings_roth, '01');
     renderHoldingsPanel('panel-brokerage', DATA.holdings_brokerage, '01');
@@ -930,6 +1166,42 @@
     return '<span class="tkr">' + cfg.ticker + '</span> ' + text.replace(/^(\$[\d.]+)/, '<span class="'+cls+'">$1</span>');
   }
 
+  // ---------------- Print Sunday Scan (the surprise-adjacent #2) ----------------
+  function printSundayScan(){
+    const printEl = document.getElementById('tdPrintView');
+    if(!printEl) return;
+    const s = computeThesisSheet();
+    const today = new Date().toLocaleDateString();
+    let html = '<h1>Sunday Scan &middot; ' + today + '</h1>';
+
+    html += '<h2>Status</h2>';
+    html += '<div class="item"><b>Discipline:</b> ' + s.discipline + '/100 (' + s.disciplineLabel + ')</div>';
+    html += '<div class="item"><b>Thesis Integrity:</b> ' + s.integrity + '% (' + s.integrityLabel + ')' + (s.questioned.length ? ' \u2014 under question: ' + s.questioned.map(h=>h.ticker).join(', ') : '') + '</div>';
+    html += '<div class="item"><b>Backlog Fatigue:</b> ' + s.fatigue + '/100 (' + s.fatigueLabel + ')</div>';
+
+    html += '<h2>Price Check</h2>';
+    DATA.price_check_config.forEach(p=>{
+      const live = priceStore[p.ticker];
+      html += '<div class="item"><b>' + p.ticker + ':</b> ' + (live && live.price != null ? '$' + live.price.toFixed(2) : 'no live price on file') + '</div>';
+    });
+
+    html += '<h2>Still Open</h2>';
+    const checked = loadChecked();
+    const open = DATA.pending_actions.urgent.concat(DATA.pending_actions.this_month).filter(a=>!checked[a.id]);
+    if(open.length){ open.forEach(a=>{ html += '<div class="item">&#9633; ' + a.text + '</div>'; }); }
+    else { html += '<div class="item">All urgent / this-month actions checked off.</div>'; }
+
+    html += '<h2>Recent Journal</h2>';
+    getAllJournalEntries().slice(-5).reverse().forEach(j=>{
+      html += '<div class="item"><b>' + j.date + ' \u00b7 ' + j.ticker + ':</b> ' + (j.detail || j.event) + '</div>';
+    });
+
+    html += '<div class="printfoot">Generated locally by your dashboard &middot; ' + APP_VERSION + ' &middot; no data left this browser</div>';
+
+    printEl.innerHTML = html;
+    window.print();
+  }
+
   function renderLatestHTML(){
     const now = new Date();
     const lastVisitRaw = SESSION_LAST_VISIT;
@@ -964,7 +1236,7 @@
     const newsTickers = Object.keys(newsCache);
 
     let html = '<div class="td-latest">';
-    html += '<div class="td-latest-title"><span class="dot"></span>WHAT\u2019S THE LATEST</div>';
+    html += '<div class="td-latest-title"><span class="dot"></span>WHAT\u2019S THE LATEST<span class="td-print-btn" id="tdPrintBtn">Print Sunday Scan</span></div>';
     html += '<div class="td-latest-visit">' + (lastVisitRaw ? 'Last time you opened this: ' + new Date(lastVisitRaw).toLocaleString() : 'First time this browser has opened the dashboard') + ' \u00b7 now: ' + now.toLocaleString() + '</div>';
     html += '<div class="td-latest-grid">';
 
@@ -1038,7 +1310,7 @@
       html += '<div class="item"><span class="sw" style="background:' + CAT_COLOR[c] + '"></span>' + CAT_LABEL[c] + ' &middot; ' + pct + '%</div>';
     });
     html += '</div>';
-    html += '<div class="td-note">Cost-basis weighted, not market value &mdash; big winners will understate their actual current weight in this view.</div>';
+    html += '<div class="td-note">Cost-basis weighted, not market value &mdash; RKLB alone is +2000% from cost, so this understates actual growth-sleeve weight.</div>';
 
     // live estimate, only for positions that have a price on file
     let liveTotal = 0, liveCostCovered = 0, pricedCount = 0;
@@ -1099,21 +1371,49 @@
           maHTML = '<div class="td-pc-ma">' + parts.join(' &middot; ') + regime + posn + '</div>';
         }
       }
-      html += '<div class="td-pc-card"><div class="td-pc-top"><span class="td-pc-ticker">' + p.ticker + '</span><span class="td-pc-price ' + tone + '">' + priceHTML + '</span></div><div class="td-pc-range">' + p.label + '</div><div class="td-pc-vs">' + vsText + '</div>' + maHTML + '</div>';
+      const spark = sparklineSVG(p.ticker);
+      html += '<div class="td-pc-card"><div class="td-pc-top"><span class="td-pc-ticker">' + p.ticker + '</span>' + (spark ? '<span class="td-pc-spark">' + spark + '</span>' : '') + '<span class="td-pc-price ' + tone + '">' + priceHTML + '</span></div><div class="td-pc-range">' + p.label + '</div><div class="td-pc-vs">' + vsText + '</div>' + maHTML + '</div>';
     });
     html += '</div>';
     html += '<div class="td-news-status" id="tdMaStatus">' + (Object.keys(maCache).length ? 'Moving averages loaded ' + new Date(Object.values(maCache)[0].asOf).toLocaleString() : 'Uses your Twelve Data key (Finnhub\u2019s free tier no longer allows historical candles for US stocks).') + '</div>';
     html += '<button class="td-news-loadbtn" id="tdMaLoadBtn" style="margin:8px 0 4px;">Load Moving Averages</button>';
-    html += '<div class="td-note" style="margin-top:6px;">Live where you\u2019ve added a key or a manual value &middot; click any price to correct it. 50/200-day are lagging trend references, not predictions.</div>';
+    html += '<div class="td-note" style="margin-top:6px;">Live where you\u2019ve added a key or a manual value &middot; click any price to correct it. 50/200-day are lagging trend references, not predictions. Sparklines build from your own Refresh Prices clicks over time \u2014 no extra API needed.</div>';
 
-    html += '<div class="td-section-title"><span class="n">04</span>OWNED STRUCTURAL HEDGES</div>';
+    // ---- Price Alerts ----
+    const firedAlerts = priceAlerts.filter(a=>a.firedAt);
+    const activeAlerts = priceAlerts.filter(a=>a.active);
+    html += '<div class="td-section-title"><span class="n">04</span>PRICE ALERTS</div>';
+    if(firedAlerts.length){
+      html += '<div class="td-alert-fired-list">';
+      firedAlerts.slice().reverse().forEach(a=>{
+        html += '<div class="td-alert-fired">&#128276; <b>' + a.ticker + '</b> crossed ' + a.direction + ' $' + a.target + ' \u2014 hit $' + a.firedPrice.toFixed(2) + ' on ' + new Date(a.firedAt).toLocaleString() + '<span class="td-alert-dismiss" data-id="' + a.id + '">dismiss</span></div>';
+      });
+      html += '</div>';
+    }
+    html += '<div class="td-alertbar">';
+    html += '<input type="text" id="tdAlertTicker" placeholder="TICKER">';
+    html += '<select id="tdAlertDir"><option value="above">crosses above</option><option value="below">crosses below</option></select>';
+    html += '<input type="text" id="tdAlertTarget" placeholder="target price">';
+    html += '<button class="td-news-loadbtn" id="tdAlertAddBtn">Add Alert</button>';
+    html += '</div>';
+    if(activeAlerts.length){
+      html += '<div class="td-alert-watch-list">';
+      activeAlerts.forEach(a=>{
+        html += '<div class="td-alert-watch">Watching <b>' + a.ticker + '</b> ' + a.direction + ' $' + a.target + '<span class="td-alert-dismiss" data-id="' + a.id + '">remove</span></div>';
+      });
+      html += '</div>';
+    } else if(!firedAlerts.length){
+      html += '<div class="td-latest-empty">No alerts set. Checked automatically every time you refresh or edit a price \u2014 no separate API call.</div>';
+    }
+
+    html += '<div class="td-section-title"><span class="n">05</span>OWNED STRUCTURAL HEDGES</div>';
     html += '<div class="td-holdings" style="margin-bottom:28px">';
     DATA.framework_universe.hedges.filter(h=>h.owned).forEach(h=>{
       html += '<div class="td-holding cat-hedge" style="grid-template-columns:80px 1fr auto;"><div class="td-hticker">' + h.ticker + '</div><div class="td-hnotes">' + h.note + '</div>' + scoreBarHTML(h.score) + '</div>';
     });
     html += '</div>';
 
-    html += '<div class="td-section-title"><span class="n">05</span>MOST RECENT LOG</div>';
+    html += '<div class="td-section-title"><span class="n">06</span>MOST RECENT LOG</div>';
     html += '<div class="td-timeline" style="margin-bottom:10px">';
     getAllJournalEntries().slice(-3).reverse().forEach(j=>{
       html += tlItemHTML(j, false);
@@ -1129,6 +1429,31 @@
 
     const maBtn = document.getElementById('tdMaLoadBtn');
     if(maBtn) maBtn.addEventListener('click', loadMovingAverages);
+
+    const alertAddBtn = document.getElementById('tdAlertAddBtn');
+    if(alertAddBtn){
+      alertAddBtn.addEventListener('click', ()=>{
+        const ticker = document.getElementById('tdAlertTicker').value.trim().toUpperCase();
+        const direction = document.getElementById('tdAlertDir').value;
+        const target = parseFloat(document.getElementById('tdAlertTarget').value);
+        if(!ticker || isNaN(target)) return;
+        priceAlerts.push({ id:'al' + Date.now(), ticker, direction, target, active:true });
+        lsSet(LS_KEYS.alerts, priceAlerts);
+        checkPriceAlerts();
+        renderOverview();
+      });
+    }
+    el.querySelectorAll('.td-alert-dismiss').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const id = btn.getAttribute('data-id');
+        priceAlerts = priceAlerts.filter(a=>a.id !== id);
+        lsSet(LS_KEYS.alerts, priceAlerts);
+        renderOverview();
+      });
+    });
+
+    const printBtn = document.getElementById('tdPrintBtn');
+    if(printBtn) printBtn.addEventListener('click', printSundayScan);
   }
 
   // ---------------- Holdings (Roth / Brokerage) ----------------
@@ -1227,12 +1552,29 @@
       html += '<div class="td-rule"><b>' + r.pct + '%</b> ' + r.label + ' &mdash; ' + r.holdings + '</div>';
     });
 
+    html += '<div class="td-section-title" style="margin-top:26px"><span class="n">06</span>CORRELATION CHECKER</div>';
+    const corrTickers = Object.keys(priceHistory).filter(t=>priceHistory[t].length >= 2);
+    if(corrTickers.length < 2){
+      html += '<div class="td-note" style="margin-top:0;">Needs at least 2 tickers with a few days of Refresh Prices history behind them. No extra API calls \u2014 this builds itself the more you use the dashboard normally. Currently tracking: ' + (corrTickers.length ? corrTickers.join(', ') : 'nothing yet') + '.</div>';
+    } else {
+      html += '<div class="td-beatcalc">';
+      html += '<div class="td-beatcalc-row"><select id="tdCorrA">' + corrTickers.map(t=>'<option value="' + t + '">' + t + '</option>').join('') + '</select>';
+      html += '<select id="tdCorrB">' + corrTickers.map((t,i)=>'<option value="' + t + '"' + (i===1?' selected':'') + '>' + t + '</option>').join('') + '</select>';
+      html += '<button class="td-news-loadbtn" id="tdCorrBtn">Check Correlation</button></div>';
+      html += '<div class="td-news-status">Computed from your own accumulated price history \u2014 nothing fetched.</div>';
+      html += '<div id="tdCorrResult"></div>';
+      html += '</div>';
+    }
+
     el.innerHTML = html;
 
     const beatBtn = document.getElementById('tdBeatCalcBtn');
     if(beatBtn) beatBtn.addEventListener('click', runBeatRateCalculator);
     const beatInput = document.getElementById('tdBeatTicker');
     if(beatInput) beatInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') runBeatRateCalculator(); });
+
+    const corrBtn = document.getElementById('tdCorrBtn');
+    if(corrBtn) corrBtn.addEventListener('click', runCorrelationCheck);
   }
 
   // ---------------- Journal ----------------
@@ -1306,6 +1648,47 @@
   }
 
   // ---------------- News ----------------
+  function getSentimentMap(){ return lsGet(LS_KEYS.headlineSentiment, {}); }
+  function setSentiment(url, ticker, sentiment){
+    const map = getSentimentMap();
+    map[url] = { ticker, sentiment, taggedAt: new Date().toISOString() };
+    lsSet(LS_KEYS.headlineSentiment, map);
+  }
+  function tickerTally(ticker){
+    const map = getSentimentMap();
+    const t = { bullish:0, neutral:0, bearish:0 };
+    Object.values(map).forEach(v=>{ if(v.ticker === ticker && t[v.sentiment] !== undefined) t[v.sentiment]++; });
+    return t;
+  }
+  function tallyHTML(ticker){
+    const t = tickerTally(ticker);
+    return '<span class="td-sent-tally" data-tally-ticker="' + ticker + '">&#9650;' + t.bullish + ' &#9679;' + t.neutral + ' &#9660;' + t.bearish + '</span>';
+  }
+  function sentimentButtonsHTML(url, ticker){
+    const map = getSentimentMap();
+    const current = map[url] ? map[url].sentiment : null;
+    const safeUrl = url.replace(/"/g, '&quot;');
+    const opts = [['bullish','&#9650;'],['neutral','&#9679;'],['bearish','&#9660;']];
+    return '<span class="td-sent-btns">' + opts.map(o=>
+      '<span class="td-sent-btn ' + o[0] + (current===o[0] ? ' active' : '') + '" data-url="' + safeUrl + '" data-ticker="' + ticker + '" data-sentiment="' + o[0] + '">' + o[1] + '</span>'
+    ).join('') + '</span>';
+  }
+  document.addEventListener('click', function(e){
+    const btn = e.target.closest('.td-sent-btn');
+    if(!btn) return;
+    const url = btn.getAttribute('data-url');
+    const ticker = btn.getAttribute('data-ticker');
+    const sentiment = btn.getAttribute('data-sentiment');
+    setSentiment(url, ticker, sentiment);
+    const container = btn.closest('.td-sent-btns');
+    if(container) container.querySelectorAll('.td-sent-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const tallyEl = document.querySelector('.td-sent-tally[data-tally-ticker="' + ticker + '"]');
+    if(tallyEl){
+      const t = tickerTally(ticker);
+      tallyEl.innerHTML = '&#9650;' + t.bullish + ' &#9679;' + t.neutral + ' &#9660;' + t.bearish;
+    }
+  });
   function getNewsWatchlist(){
     return Array.from(new Set(
       DATA.price_check_config.map(p=>p.ticker).concat(DATA.framework_universe.hedges.filter(h=>h.owned).map(h=>h.ticker))
@@ -1383,14 +1766,14 @@
         const cache = lsGet(LS_KEYS.newsCache, {});
         cache[t] = { articles: articles.map(a=>({ headline:a.headline, url:a.url, source:a.source, datetime:a.datetime })), asOf: new Date().toISOString() };
         lsSet(LS_KEYS.newsCache, cache);
-        let g = '<div class="td-news-group"><div class="td-news-group-head">' + t + '</div>';
+        let g = '<div class="td-news-group"><div class="td-news-group-head">' + t + ' ' + tallyHTML(t) + '</div>';
         if(articles.length === 0){
           g += '<div class="td-news-empty">No headlines in the last 14 days.</div>';
         } else {
           articles.forEach(a=>{
             const d = new Date(a.datetime * 1000);
             g += '<div class="td-news-item"><a class="td-news-headline" href="' + a.url + '" target="_blank" rel="noopener">' + a.headline + '</a>' +
-                 '<div class="td-news-meta">' + (a.source || '') + ' \u00b7 ' + d.toLocaleDateString() + '</div></div>';
+                 '<div class="td-news-meta">' + (a.source || '') + ' \u00b7 ' + d.toLocaleDateString() + sentimentButtonsHTML(a.url, t) + '</div></div>';
           });
         }
         g += '</div>';
@@ -1442,6 +1825,53 @@
     }
     if(statusEl) statusEl.textContent = 'Moving averages loaded \u00b7 ' + new Date().toLocaleTimeString();
     renderOverview();
+  }
+
+  // ---------------- Correlation Checker (uses your own accumulated price history, no API) ----------------
+  function pearsonCorrelation(seriesA, seriesB){
+    const mapA = {}; seriesA.forEach(p=>{ mapA[p.date] = p.price; });
+    const mapB = {}; seriesB.forEach(p=>{ mapB[p.date] = p.price; });
+    const dates = Object.keys(mapA).filter(d=>mapB[d] !== undefined).sort();
+    if(dates.length < 4) return null;
+    const retA = [], retB = [];
+    for(let i=1; i<dates.length; i++){
+      const pa0 = mapA[dates[i-1]], pa1 = mapA[dates[i]];
+      const pb0 = mapB[dates[i-1]], pb1 = mapB[dates[i]];
+      if(pa0 && pb0){ retA.push((pa1 - pa0) / pa0); retB.push((pb1 - pb0) / pb0); }
+    }
+    const n = retA.length;
+    if(n < 3) return null;
+    const meanA = retA.reduce((a,b)=>a+b,0) / n;
+    const meanB = retB.reduce((a,b)=>a+b,0) / n;
+    let num = 0, denA = 0, denB = 0;
+    for(let i=0; i<n; i++){
+      const da = retA[i] - meanA, db = retB[i] - meanB;
+      num += da * db; denA += da * da; denB += db * db;
+    }
+    if(denA === 0 || denB === 0) return null;
+    return { r: num / Math.sqrt(denA * denB), n };
+  }
+
+  function corrLabel(r){
+    const abs = Math.abs(r), dir = r >= 0 ? 'positive' : 'negative';
+    if(abs >= 0.7) return 'Strong ' + dir;
+    if(abs >= 0.4) return 'Moderate ' + dir;
+    if(abs >= 0.2) return 'Weak ' + dir;
+    return 'No real relationship';
+  }
+
+  function runCorrelationCheck(){
+    const a = document.getElementById('tdCorrA').value;
+    const b = document.getElementById('tdCorrB').value;
+    const resultEl = document.getElementById('tdCorrResult');
+    if(a === b){ resultEl.innerHTML = '<div class="td-latest-empty">Pick two different tickers.</div>'; return; }
+    const res = pearsonCorrelation(priceHistory[a], priceHistory[b]);
+    if(!res){
+      resultEl.innerHTML = '<div class="td-latest-empty">Not enough overlapping days yet between ' + a + ' and ' + b + ' \u2014 keep refreshing prices and check back.</div>';
+      return;
+    }
+    const tone = Math.abs(res.r) >= 0.4 ? (res.r >= 0 ? 'good' : 'bad') : 'mid';
+    resultEl.innerHTML = '<div class="td-beat-result"><div><div class="td-beat-result-ticker">' + a + ' vs ' + b + '</div><div class="td-beat-result-sub">' + corrLabel(res.r) + ' \u00b7 based on ' + res.n + ' overlapping days</div></div><div class="td-beat-result-pct ' + tone + '">' + res.r.toFixed(2) + '</div></div>';
   }
 
   // ---------------- Beat-Rate Calculator (the surprise) ----------------
